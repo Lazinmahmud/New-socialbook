@@ -94,7 +94,9 @@
        </div>
       </div>
     </div>
-<!--   <div class="post ">
+    
+    
+<!--  <div class="post ">
       <div class="post-header_and_post_content">
         <div class="profile-box ">
           <div class="post-profile">
@@ -132,7 +134,19 @@
           </div>
              </div>
                </div>
-              </div>--->
+          <div class="post-comment-container">
+            <div class="user-comment-profile">
+              <img >
+            </div>
+            <div class="comment-inp-box">
+              <input type="text" placeholder="Comment as lazim">
+              <i class='bx bxl-telegram'></i>
+            </div>
+          </div>
+         
+               
+      </div>
+      ---->
               
         
     <div class="loading-post-container">
@@ -400,6 +414,7 @@
                   <h4>Share</h4>
                 </div>
               </div>
+              
             </div>`;
 
       // Find the post-create-container and insert the new post directly after it
@@ -445,9 +460,11 @@ function formatRelativeTime(isoDate) {
   return postTime.toLocaleDateString('en-US', options);
 }
 
+
+
+
 // Fetch and display posts when the page loads
 window.addEventListener('load', () => {
-  // Loading spinner শুরুতে দেখাবে
   const loadingContainer = document.querySelector('.loading-post-container');
   loadingContainer.style.display = 'block';
 
@@ -499,6 +516,7 @@ window.addEventListener('load', () => {
                   <h4>Share</h4>
                 </div>
               </div>
+              
             </div>`;
         
         postContainer.insertAdjacentElement('afterend', postElement);
@@ -514,8 +532,6 @@ window.addEventListener('load', () => {
     loadingContainer.style.display = 'none';
   });
 });
-  
-  
   
   
   
