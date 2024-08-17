@@ -166,7 +166,6 @@ nav {
 }
 .main-container{
   height: 100vh;
-  
   margin-right: auto;
   width: 100%;
   margin-top: 5rem;
@@ -319,7 +318,6 @@ nav {
   justify-content: space-between ;
   border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
-  padding-left: 1rrem
 }
 .like-box{
   width: 33%;
@@ -707,6 +705,9 @@ nav {
 .edit-save-btn:active{
   opacity: 0.60;
 }
+.loading-post-container{
+  display: none;
+}
 .loading-post{
   width: 100%;
   background: var(--post-bg-color);
@@ -753,4 +754,210 @@ nav {
   height: 14px;
   background: var(--off-white-color);
   border-radius: 2rem;
+}
+.post-comment-container{
+  width: 100%;
+  display: flex ;
+  align-items: center;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 1rem;
+  gap: 10px;
+}
+.user-comment-profile{
+  width: 50px;
+  height: 50px;
+}
+.user-comment-profile img{
+  width: 45px;
+  height: 45px;
+  background: var(--off-white-color);
+  border-radius: 50%;
+}
+.comment-inp-box{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background: var(--off-white-color);
+  border-radius: 2rem;
+  height: 35px;
+}
+.comment-inp-box input{
+  width: 85%;
+  background: transparent;
+  border-radius: 2rem;
+  border: 0;
+  height: 100%;
+  outline: 0;
+  padding: 20px;
+}
+.comment-inp-box i{
+  padding: 10px;
+  font-size: 1.3rem;
+  border-radius: 5px;
+  margin-left: 1rem;
+  color: var(--main-color);
+}
+.comment-inp-box i:active{
+  opacity: 0.60;
+}
+
+
+
+
+
+
+
+
+/* Media query for mobile devices */
+@media only screen and (max-width: 767px) {
+    /* Your mobile-specific styles go here */
+
+body {
+ font-size: 16px;
+}
+.main-container{
+  margin-top: 4rem;
+}
+.main-content{
+  width: 100%;
+  margin-left: 0;
+}
+.left-sidebar{
+  display: none;
+}
+.right-sidebar{
+  display: none;
+}
+.post{
+  border-radius: 0;
+  box-shadow: none;
+  margin-bottom: 0;
+  border-bottom: 8px solid #cccc;
+}
+.post-create-container{
+  border-radius: 0;
+  box-shadow: none;
+  border-radius: 0;
+  margin-bottom: 0;
+  border-bottom: 8px solid #cccc;
+}
+.post-text p{
+  font-size: 15px;
+}
+.post-userName-andtime h4{
+  font-size: 14px;
+}
+.post-profile{
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: var(--off-white-color);
+}
+.post-userName-andtime{
+  margin-left: 5px;
+}
+.post-header_and_post_content{
+  padding-left: 7px;
+}
+.span{
+  font-size: 12px;
+}
+.post-menu i{
+  font-size: 22px;
+  padding: 5px;
+}
+.post-activity-container{
+  padding-left: 8px;
+  padding-right: 8px;
+}
+.post-activity-box{
+  border: 0;
+}
+.like-box img{
+  width: 23px;
+}
+.like-box h4{
+  font-size: 11px;
+}
+.post-img img{
+  max-height: 400px;
+  
+}
+.loading-post{
+  padding-bottom: 1rem;
+  border-radius: 0;
+  box-shadow: none;
+  margin-bottom: 0px;
+  border-bottom: 8px solid #cccc;
+}
+.textarea p{
+  font-size: 13px;
+}
+.nav-img img {
+  width: 2.2rem;
+  margin-left: 1rem;
+}
+.nav-icon img{
+  width: 1.5rem;
+}
+.nav-left{
+  width: 15%;
+}
+.nav-right{
+  width: 15%;
+}
+.nav-middle{
+  width: 70%;
+}
+.profile-circle{
+  width: 35px;
+  height: 35px;
+}
+.profile-page-container{
+  width: 100%;
+  margin-top: 4rem;
+}
+.cover-photo-container{
+  height: 200px;
+}
+.profile-photo-circle{
+  width: 150px;
+  height: 150px;
+  margin-top: -5rem;
+}
+.profile-photo-circle img{
+  border: 4px solid var(--post-bg-color);
+}
+.profile-name-box{
+  padding-left: 1.4rem;
+  margin-top: 10px;
+}
+.profile-name-box h3 {
+  font-size: 1.1rem;
+}
+.bio-container{
+  padding-left: 1.4rem;
+}
+.follower-container{
+  padding-left: 1.4rem;
+}
+.Edit-profile-btn{
+  display: none;
+}
+#accountEmail{
+  font-size: 13px;
+}
+.bio-container p{
+  font-size: 14px;
+}
+.follower-container p{
+  font-size: 13px;
+}
+
+
+
+
+
+
 }
