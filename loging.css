@@ -1,0 +1,126 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'poppins', Sans-Serif;
+  text-decoration: none;
+}
+:root{
+  --main-color: #0159FF;
+}
+body{
+  background: #fff;
+}
+.loging-area{
+  background: #f3f4f8;
+  height: 50rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+.loging-left{
+  width: 50%;
+  height: 100%;
+}
+.loging-right{
+  width: 50%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+#MainForm{
+  background: #fff;
+  padding: 1rem;
+  width: 75%;
+  box-shadow: 0 3px 4px rgba(0,0,0,0.2);
+  border-radius: 5px;
+}
+#emailInp{
+  padding: 12px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: 0;
+  font-size: 15px;
+}
+#emailInp:focus{
+  border: 1px solid var(--main-color);
+}
+#passwordInp{
+  padding: 12px;
+  width: 100%;
+  margin-top: 13px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: 0;
+  font-size: 15px;
+}
+#passwordInp:focus{
+  border: 1px solid var(--main-color);
+}
+.errorMessage {
+  color: #E90418;
+  font-size: 15px;
+  margin-top: 5px;
+  margin-left: 5px;
+  font-weight: 400;
+}
+.login-btn{
+  width: 100%;
+  padding: 12px;
+  border: 0;
+  background: var(--main-color);
+  margin-top: 15px;
+  color: #fff;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 18px;
+}
+.login-btn:active{
+  opacity: 0.70;
+}
+.fg-pass{
+  margin-top: 1rem;
+  font-weight: bold;
+  text-align: center;
+  color: #1876f2;
+  font-size: 15px;
+}
+hr{
+  margin-top: 2rem;
+  width: 100%;
+  height: 1px;
+  border: 0;
+  background: #ccc;
+}
+.singUp-btn{
+  padding: 12px;
+  border: 0;
+  background: #28a745;
+  margin-top: 25px;
+  color: #fff;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 15px;
+}
+.singUp-btn:active{
+  opacity: 0.70;
+}
+.new-account-btn-box{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.loging-left-content{
+  margin-top: 15rem;
+  margin-left: 2rem;
+}
+.loging-left img{
+  width: 18rem;
+}
+.loging-left-content p{
+  font-size: 28px;
+}

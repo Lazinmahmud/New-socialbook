@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#fff">
+  <title>singup</title>
+   <link rel="stylesheet" href="register.css">
+   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+  
+  <div class="logo-img-container">
+    <img src="logo-blue.png">
+  </div>
+  
+  
+  
+  <div class="form-container">
+    <form id="MainForm">
+    <div class="form-header">
+      <div>
+        <h2>Sing Up</h2>
+        <small>It's quick and easy.</small>
+      </div>
+    </div>
+    <p class="errorMessage"></p>
+    <input type="text" id="fnameInp" placeholder="First name">
+    <input type="text" id="lnameInp" placeholder="Last name">
+    <input type="email" id="emailInp" placeholder="Email address">
+    <input type="password" id="passwordInp" placeholder="Password">
+    <div class="date-display-flex">
+      <p class="date-of-birth">Date of birth</p>
+      <i class='bx bxs-rewind-circle bx-rotate-270' ></i>
+    </div>
+    
+    
+        
+        <select id="day" name="day"></select>
+    <select id="month" name="month"></select>
+    <select id="year" name="year"></select>
+    <br><br>
+    <div class="display-flex">
+        <p class="gender">Gender</p>
+        <i class='bx bxs-rewind-circle bx-rotate-270'></i>
+    </div>
+        
+        <div class="gender-container">
+            <label class="gender-option">Female
+                <input type="radio" id="female" name="gender" value="female">
+                <span class="checkmark"></span>
+            </label>
+            <label class="gender-option">Male
+                <input type="radio" id="male" name="gender" value="male">
+                <span class="checkmark"></span>
+            </label>
+            <label class="gender-option">Custom
+                <input type="radio" id="custom" name="gender" value="custom">
+                <span class="checkmark"></span>
+            </label>
+        </div>
+        <br>
+        <p class="sb-text">People who use our service may have uploaded your contact information to Facebook. <a class="link-color" href="#">Learn more</a>.</p>
+           <br>
+        <p class="sb-text-two">By clicking Sign Up, you agree to our <a class="link-color" href="#">Terms, Privacy Policy</a> and <a class="link-color" href="#">Cookies Policy.</a> You may receive SMS notifications from us and can opt out at any time.</p>
+          
+          <br> 
+          
+    <button type="submit" class="singup-btn">Sign Up</button>
+    <a href="index.html"><button type="button" class="loging-btn">Log in</button></a>
+  </form>
+  </div>
+  
+  
+  
+  
+  
+  
+  
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getDatabase, set, ref } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDLiT3pWoHy1IK3StGdJQsiVndCSgl7XB8",
+  authDomain: "socialbook-69ec5.firebaseapp.com",
+  databaseURL: "https://socialbook-69ec5-default-rtdb.firebaseio.com",
+  projectId: "socialbook-69ec5",
+  storageBucket: "socialbook-69ec5.appspot.com",
+  messagingSenderId: "720368891227",
+  appId: "1:720368891227:web:ba2f4111a3b15ece5b967e"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getDatabase();
+const auth = getAuth(app);
+
+const EmailInp = document.getElementById("emailInp");
+const PassInp = document.getElementById("passwordInp");
+const FnameInp = document.getElementById("fnameInp");
+const LnameInp = document.getElementById("lnameInp");
+const MainForm = document.getElementById("MainForm");
+const GenderInputs = document.querySelectorAll('input[name="gender"]');
+const DayInp = document.getElementById("day");
+const MonthInp = document.getElementById("month");
+const YearInp = document.getElementById("year");
+
+// Function to clear error message
+const clearError = () => {
+  const errorMessageElement = document.querySelector('.errorMessage');
+  errorMessageElement.textContent = '';
+  errorMessageElement.style.display = 'none';
+};
+
+// Add event listeners to input fields to clear error message on input
+const inputs = [EmailInp, PassInp, FnameInp, LnameInp, DayInp, MonthInp, YearInp];
+inputs.forEach(input => {
+  input.addEventListener('input', clearError);
+});
+
+GenderInputs.forEach(input => {
+  input.addEventListener('change', clearError);
+});
+
+const RegisterUser = (evt) => {
+  evt.preventDefault();
+
+  // Get selected gender
+  let genderValue = '';
+  GenderInputs.forEach((input) => {
+    if (input.checked) {
+      genderValue = input.value;
+    }
+  });
+
+  // Get date of birth
+  const dateOfBirth = `${YearInp.value}-${MonthInp.value}-${DayInp.value}`;
+
+  createUserWithEmailAndPassword(auth, EmailInp.value, PassInp.value)
+    .then((credentials) => {
+      set(ref(db, 'UserAuthList/' + credentials.user.uid), {
+        firstName: FnameInp.value,
+        lastName: LnameInp.value,
+        Email: EmailInp.value,
+        Password: PassInp.value,
+        gender: genderValue,
+        dateOfBirth: dateOfBirth,
+      });
+      alert('User registered successfully!');
+    })
+    .catch((error) => {
+      const errorMessageElement = document.querySelector('.errorMessage');
+      errorMessageElement.textContent = error.message;
+      errorMessageElement.style.display = 'block';
+      console.log(error.code);
+      console.log(error.message);
+    });
+};
+
+MainForm.addEventListener('submit', RegisterUser);
+</script>
+  [
+  
+  
+  
+  <script src="script.js"></script>
+</body>
+</html>

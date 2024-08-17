@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="home.css">
+  <title>home</title>
+  
+</head>
+<body>
+  
+  
+  <nav>
+    <div class="nav-left">
+      <div class="nav-img ">
+      <img src="logo-circle.png ">
+    </div>
+    </div>
+    <div class="nav-middle ">
+      <div class="nav-icon-box">
+        <div id="homeNav" class="nav-icon ">
+        <img id="homeGray" src="home.png">
+        <img id="homeBlue" src="home-blue.png">
+      </div>
+      <div id="profileNav" class="nav-icon ">
+        <img id="profileGray" src="profile.png">
+        <img id="profileBlue" src="profile-blue.png">
+      </div>
+      <div id="notificationNav" class="nav-icon ">
+        <img id="notiGray" src="notification.png">
+        <img id="notiBlue" src="notafication-blue.png">
+      </div>
+      </div>
+      <div class="underline"></div>
+    </div>
+    
+    <div class="nav-right">
+      <div class="profile-circle " onclick="toggleDropdown()">
+      <img src="post4.jpg ">
+    </div>
+    </div>
+    
+    
+  </nav>
+  
+  
+  <div class="drop-down-menu " id="dropdownMenu">
+    
+    <div class="user-profile-and-name ">
+      <div class="menu-profile "></div>
+      <h4 class="greet"></h4>
+    </div>
+    <div class="menu-item ">
+      <img src="setting.png ">
+      <h4>Settings & privacy</h4>
+      <img id="menu-arrowPng" src="arrow.png ">
+    </div>
+    <div class="menu-item ">
+      <img src="help.png ">
+      <h4>Help & support</h4>
+      <img id="menu-arrowPng" src="arrow.png ">
+    </div>
+    <div class="menu-item ">
+      <img src="display.png ">
+      <h4>Display & accessibility</h4>
+      <img id="menu-arrowPng" src="arrow.png ">
+    </div>
+    <div class="menu-item ">
+      <img src="feedback.png ">
+      <h4>Give feedback</h4>
+    </div>
+    <div id="logout" class="menu-item ">
+      <img src="logout.png ">
+      <h4>Log Out</h4>
+    </div>
+  </div>
+  
+
+
+  <div class="main-container">
+    <div class="left-sidebar"></div>
+   <div class="main-content">
+     <div class="post-create-container ">
+     <div class="post-crte-profie-cntnr ">
+       <div class="profile-box-pst-cret">
+       <div class="profile-circle post-create " >
+        <img src="post4.jpg ">
+       </div>
+       </div>
+       <div class="textarea ">
+         <p id="postTextarea">What do you think?</p>
+       </div>
+      </div>
+    </div>
+<!--   <div class="post ">
+      <div class="post-header_and_post_content">
+        <div class="profile-box ">
+          <div class="post-profile">
+         <img src="post.jpg ">
+       </div>
+     </div>
+     <div class="post-userName-andtime">
+       <h4>Lazim Mahmud</h4>
+       
+     </div>
+     <div class="post-menu">
+       <i class='bx bx-dots-vertical-rounded'></i>
+     </div>
+           </div>
+         <div class="post-text ">
+       <p>hello world welcome to socialbook and this is a social media platform in the world</p>
+   </div>
+ <div class="post-img ">
+  <img src="post.jpg" id="databaseImg">
+    </div>
+      <div class="post-activity-container">
+       <div class="post-activity-box ">
+         <div onclick="toggleLike()" class="like-box ">
+            <img id="likeGray" src="like.png">
+              <img id="likeBlue" src="like-blue.png">
+             <h4 id="likeText">Like</h4>
+           </div>
+         <div class="like-box ">
+       <img src="comment.png">
+     <h4>Comment</h4>
+   </div>
+     <div class="like-box ">
+      <img src="share.png">
+        <h4>Share</h4>
+          </div>
+             </div>
+               </div>
+              </div>--->
+              
+        
+    <div class="loading-post-container">
+    <div class="loading-post">
+       <div class="loading-profile-header">
+         <div class="loading-profile"></div>
+         <div class="bar-container">
+           <div class="loading-bar"></div>
+         <div style="margin-top: 9px; width: 35%;" class="loading-bar"></div>
+         </div>
+       </div>
+     <div class="loading-bottom-bar">
+           <div class="bar"></div>
+           <div class="bar"></div>
+           <div class="bar"></div>
+         </div>
+   </div>
+   <div class="loading-post">
+       <div class="loading-profile-header">
+         <div class="loading-profile"></div>
+         <div class="bar-container">
+           <div class="loading-bar"></div>
+         <div style="margin-top: 9px; width: 35%;" class="loading-bar"></div>
+         </div>
+       </div>
+     <div class="loading-bottom-bar">
+           <div class="bar"></div>
+           <div class="bar"></div>
+           <div class="bar"></div>
+         </div>
+   </div>
+    
+    
+  </div>
+     
+              
+   </div>
+    
+    <div class="right-sidebar"></div>
+  </div>
+  
+  <div class="profile-page-container">
+    <div class="profile-page ">
+      <div class="profile-into-container ">
+        <div class="cover-photo-container ">
+          
+        </div>
+        <div class="profile-photo-circle">
+  <img id="profilePhoto">
+</div>
+        <button type="button" class="Edit-profile-btn ">Edit profile</button>
+        <div class="profile-name-box ">
+          <h3 class="greet "></h3>
+          <p id="accountEmail"></p>
+        </div>
+        <div class="bio-container ">
+          <p>Hello friend's welcome to my X account</p>
+        </div>
+        <div class="follower-container ">
+          <p><span class="follow-count">0</span> Following</p>
+          <p>•</p>
+          <p><span class="follow-count">0</span> Followers</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+ 
+ 
+ 
+ 
+  <div class="edit-profile-popup-opachity ">
+    
+    <div class="edit-profile-popup ">
+      <div class="edit-profile-popup-header ">
+        <h4>Edit Profile</h4>
+        <i class='bx bx-x-circle'></i>
+      </div>
+     <div class="popup-content-box ">
+       <label for="coverImgInp">
+        <div class="edit-profile-cover-box ">
+        <img id="coverImgSelect">
+        <input type="file" id="coverImgInp" accept="image/*" style="display: none;" >
+      </div>
+      </label>
+      <label for="profileInp">
+      <div class="edit-profile-box ">
+        <img id="profileImgSleted">
+        <input type="file" id="profileInp" accept="image/*" style="display: none;" >
+      </div>
+      </label>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <div class="edit-input-box ">
+        <input id="editName" type="text" placeholder="Name ">
+      </div>
+      <div class="edit-input-box ">
+        <input type="text" placeholder="Bio ">
+      </div>
+      <div class="save-btn-container ">
+        <button type="button" class="edit-save-btn">Save</button>
+      </div>
+     </div>
+    </div>
+    
+  </div>
+  
+  <div class="popup-opachity "> 
+    <div class="post-create-popup ">
+      <div class="post-create-header ">
+        <h4>Create post</h4>
+        <i class='bx bx-x-circle'></i>
+      </div>
+      <div class="popup-content-box ">
+        <div class="popup-profile-box ">
+          <div class="popup-profile ">
+            <img src="post4.jpg ">
+          </div>
+          <h4 class="greet"></h4>
+        </div>
+        <div class="post-text-input ">
+          <textarea id="textareaPlaceholder" cols="3" rows="3" placeholder="What do you think,"></textarea>
+        </div>
+        <label for="fileInput">
+        <div class="post-img-select-box ">
+          <div class="img-select-icon ">
+            <div class="icon-box ">
+              <i class='bx bxs-image'></i>
+            </div>
+              <h4>Add Photos</h4>
+          </div>
+          <input type="file" id="fileInput" accept="image/*" style="display: none;" >
+          <img id="selectedImage" >
+        </div>
+        </label>
+        <button class="postBtn" id="uploadBtn">POST</button>
+      </div>
+    </div>
+  </div>
+  
+  
+  
+  
+  
+
+    <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
+  import { getDatabase, ref as dbRef, set, get } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+  
+  const firebaseConfig = {
+    apiKey: "AIzaSyDLiT3pWoHy1IK3StGdJQsiVndCSgl7XB8",
+    authDomain: "socialbook-69ec5.firebaseapp.com",
+    databaseURL: "https://socialbook-69ec5-default-rtdb.firebaseio.com",
+    projectId: "socialbook-69ec5",
+    storageBucket: "socialbook-69ec5.appspot.com",
+    messagingSenderId: "720368891227",
+    appId: "1:720368891227:web:ba2f4111a3b15ece5b967e"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const storage = getStorage(app);
+  const database = getDatabase(app);
+
+
+
+
+
+  document.getElementById('fileInput').addEventListener('change', function(event) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById('selectedImage').src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+});
+  
+  document.getElementById('uploadBtn').addEventListener('click', function() {
+  const text = document.getElementById('textareaPlaceholder').value;
+  const fileInput = document.getElementById('fileInput');
+  const file = fileInput.files[0];
+
+  if (text || file) {
+    const userId = 'user123';
+    const userFirstName = UserInfo.firstName;
+    const userLastName = UserInfo.lastName;
+    const postId = new Date().getTime(); // Unique post ID based on timestamp
+    const uploadTime = new Date().toISOString(); // Save current time
+
+    let imageUrl = '';
+
+    // Function to handle image upload
+    const uploadImage = () => {
+      return new Promise((resolve, reject) => {
+        if (file) {
+          const storageRef = ref(storage, 'images/' + postId + '-' + file.name);
+          uploadBytes(storageRef, file).then(snapshot => {
+            getDownloadURL(snapshot.ref).then(url => {
+              imageUrl = url;
+              resolve();
+            }).catch(reject);
+          }).catch(reject);
+        } else {
+          resolve();
+        }
+      });
+    };
+
+    // Save text and user details to Firebase Realtime Database
+    uploadImage().then(() => {
+      return set(dbRef(database, 'posts/' + postId), {
+        userId: userId,
+        firstName: userFirstName,
+        lastName: userLastName,
+        text: text,
+        timestamp: postId,
+        uploadTime: uploadTime,
+        imageUrl: imageUrl // Save image URL if available
+      });
+    }).then(() => {
+      alert("Post successfully created!");
+
+      // Show the new post immediately
+      const postContainer = document.createElement('div');
+      postContainer.className = 'post';
+      postContainer.innerHTML = `
+        <div class="post-header_and_post_content">
+            <div class="profile-box ">
+              <div class="post-profile">
+                
+              </div>
+            </div>
+            <div class="post-userName-andtime">
+              <h4>${userFirstName} ${userLastName}</h4>
+              <p class="span" id="post-time-${postId}">${formatRelativeTime(uploadTime)}</p>
+            </div>
+            <div class="post-menu">
+       <i class='bx bx-dots-vertical-rounded'></i>
+     </div>
+          </div>
+          <div class="post-text">
+              <p>${text}</p>
+            </div>
+            ${imageUrl ? `<div class="post-img"><img src="${imageUrl}" id="databaseImg"></div>` : ''}
+            <div class="post-activity-container">
+              <div class="post-activity-box ">
+                <div onclick="toggleLike()" class="like-box ">
+                  <img id="likeGray" src="like.png">
+                  <img id="likeBlue" src="like-blue.png">
+                  <h4 id="likeText">Like</h4>
+                </div>
+                <div class="like-box ">
+                  <img src="comment.png">
+                  <h4>Comment</h4>
+                </div>
+                <div class="like-box ">
+                  <img src="share.png">
+                  <h4>Share</h4>
+                </div>
+              </div>
+            </div>`;
+
+      // Find the post-create-container and insert the new post directly after it
+      const postCreateContainer = document.querySelector('.post-create-container');
+      postCreateContainer.insertAdjacentElement('afterend', postContainer);
+
+      // Clear the textarea and reset image preview
+      document.getElementById('textareaPlaceholder').value = '';
+      document.getElementById('fileInput').value = '';
+      document.getElementById('selectedImage').src = 'post.jpg'; // Reset image preview
+    }).catch(error => {
+      console.error("Error creating post: ", error);
+    });
+  } else {
+    alert("Please write something or select an image before posting.");
+  }
+});
+
+// Function to format time as relative time (e.g., "1m ago")
+function formatRelativeTime(isoDate) {
+  const now = new Date();
+  const postTime = new Date(isoDate);
+  const diffInSeconds = Math.floor((now - postTime) / 1000);
+
+  const options = {
+    weekday: 'short', // sat, sun
+    month: 'short',   // Aug, Sep
+    day: 'numeric',   // 17, 18
+    hour: 'numeric',  // 12
+    minute: 'numeric', // 30
+    hour12: true      // PM, AM
+  };
+
+  if (diffInSeconds < 60) return `${diffInSeconds} seconds ago`;
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) return `${diffInHours}h ago`;
+  const diffInDays = Math.floor(diffInHours / 24);
+  if (diffInDays <= 5) return `${diffInDays}d ago`;
+
+  // ৫ দিনের বেশি হলে নির্দিষ্ট ফরম্যাটে তারিখ দেখাবে
+  return postTime.toLocaleDateString('en-US', options);
+}
+
+// Fetch and display posts when the page loads
+window.addEventListener('load', () => {
+  // Loading spinner শুরুতে দেখাবে
+  const loadingContainer = document.querySelector('.loading-post-container');
+  loadingContainer.style.display = 'block';
+
+  get(dbRef(database, 'posts')).then(snapshot => {
+    if (snapshot.exists()) {
+      const posts = snapshot.val();
+      const postContainer = document.querySelector('.post-create-container');
+
+      for (const postId in posts) {
+        const post = posts[postId];
+        const postElement = document.createElement('div');
+        postElement.className = 'post';
+        
+        // Include the image URL if it exists
+        const imageHTML = post.imageUrl ? `<div class="post-img"><img src="${post.imageUrl}" id="databaseImg"></div>` : '';
+
+        postElement.innerHTML = `
+          <div class="post-header_and_post_content">
+            <div class="profile-box ">
+              <div class="post-profile">
+                
+              </div>
+            </div>
+            <div class="post-userName-andtime">
+              <h4>${post.firstName} ${post.lastName}</h4>
+              <p class="span" id="post-time-${postId}">${formatRelativeTime(post.uploadTime)}</p>
+            </div>
+            <div class="post-menu">
+       <i class='bx bx-dots-vertical-rounded'></i>
+     </div>
+          </div>
+          <div class="post-text">
+              <p>${post.text}</p>
+            </div>
+            ${imageHTML}
+            <div class="post-activity-container">
+              <div class="post-activity-box ">
+                <div onclick="toggleLike()" class="like-box ">
+                  <img id="likeGray" src="like.png">
+                  <img id="likeBlue" src="like-blue.png">
+                  <h4 id="likeText">Like</h4>
+                </div>
+                <div class="like-box ">
+                  <img src="comment.png">
+                  <h4>Comment</h4>
+                </div>
+                <div class="like-box ">
+                  <img src="share.png">
+                  <h4>Share</h4>
+                </div>
+              </div>
+            </div>`;
+        
+        postContainer.insertAdjacentElement('afterend', postElement);
+      }
+
+      // পোস্ট লোড হয়ে গেলে loading spinner লুকাবে
+      loadingContainer.style.display = 'none';
+    }
+  }).catch(error => {
+    console.error("Error fetching posts: ", error);
+
+    // কোনো ত্রুটি হলে loading spinner লুকাবে
+    loadingContainer.style.display = 'none';
+  });
+});
+  
+  
+  
+  
+  
+  
+  document.querySelector('.edit-save-btn').addEventListener('click', function() {
+    const file = document.querySelector("#profileInp").files[0];
+    
+    if (file) {
+      const name = new Date().getTime() + '-' + file.name;
+      const storageRef = ref(storage, name);
+      const metadata = {
+        contentType: file.type
+      };
+
+      uploadBytes(storageRef, file, metadata)
+        .then(snapshot => getDownloadURL(snapshot.ref))
+        .then(url => {
+          console.log(url);
+          alert("Profile image upload successful");
+
+          // Save URL to Realtime Database
+          const userId = "user123"; // Replace with the current user ID
+          set(dbRef(database, 'users/' + userId + '/profileImage'), url);
+
+          const profilePhoto = document.querySelector("#profilePhoto");
+          profilePhoto.src = url;
+        })
+        .catch(error => {
+          console.error("Error uploading image: ", error);
+        });
+    } else {
+      alert("Please select a profile image to upload.");
+    }
+  });
+
+  // Fetch the URL from Realtime Database on page load
+  window.addEventListener('load', () => {
+    const userId = "user123"; // Replace with the current user ID
+    get(dbRef(database, 'users/' + userId + '/profileImage'))
+      .then(snapshot => {
+        if (snapshot.exists()) {
+          const url = snapshot.val();
+          const profilePhoto = document.querySelector("#profilePhoto");
+          profilePhoto.src = url;
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching image URL: ", error);
+      });
+  });
+</script>
+  
+  <script>
+    
+    let UserCreds = JSON.parse(sessionStorage.getItem("user-creds"));
+    let UserInfo = JSON.parse(sessionStorage.getItem("user-info"));
+
+    let MsgHead = document.getElementById('accountEmail');
+    let GreetHeads = document.querySelectorAll('.greet'); // Select all elements with class 'greet'
+    let LogOutBtn = document.getElementById('logout');
+    let PostTextarea = document.getElementById('postTextarea');
+    let textareaPlaceholder = document.getElementById('textareaPlaceholder');
+    let nameInput = document.getElementById('editName');
+
+    let logOut = () => {
+        sessionStorage.removeItem("user-creds");
+        sessionStorage.removeItem("user-info");
+        window.location.href = 'index.html';
+    }
+
+    let CheckCred = () => {
+        if (!sessionStorage.getItem("user-creds")) {
+            window.location.href = 'index.html';
+        } else {
+            MsgHead.innerText = `${UserCreds.email}`;
+            GreetHeads.forEach(element => {
+                element.innerText = `${UserInfo.firstName} ${UserInfo.lastName}`;
+            });
+            // Set the placeholder text with user's first name
+            PostTextarea.innerText = `What do you think, ${UserInfo.firstName}?`;
+            textareaPlaceholder.placeholder = `What do you think, ${UserInfo.firstName}?`
+            nameInput.value = `${UserInfo.firstName} ${UserInfo.lastName}`;
+        }
+    }
+
+    window.addEventListener('load', CheckCred);
+    LogOutBtn.addEventListener('click', logOut);
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>
