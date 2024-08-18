@@ -124,3 +124,83 @@ hr{
 .loging-left-content p{
   font-size: 28px;
 }
+.loging-logo{
+  width: 100%;
+  display: none ;
+  align-items: center ;
+  justify-content: center;
+}
+.loging-logo img{
+  width: 4rem;
+}
+
+
+
+
+/* Media query for mobile devices */
+@media only screen and (max-width: 767px){
+  
+.loging-left{
+  display: none;
+}
+body{
+  background: #f3f4f8;
+}
+
+#MainForm{
+  width: 100%;
+  background: transparent;
+  box-shadow: none;
+  height: 100%;
+  
+}
+.loging-right{
+  width: 100%;
+}
+hr{
+  display: none;
+}
+#emailInp{
+  padding: 20px;
+  border-radius: 10px;
+}
+#passwordInp{
+  padding: 20px;
+  border-radius: 10px;
+}
+.login-btn{
+  border-radius: 2rem;
+  font-weight: normal;
+  font-size: 17px;
+}
+.fg-pass{
+  color: #000;
+  font-size: 14px;
+  font-weight: 420;
+}
+.singUp-btn{
+  width: 200px;
+  background: transparent;
+  border: 1px solid var(--main-color);
+  color: var(--main-color);
+  border-radius: 2rem;
+  font-weight: 420;
+}
+.new-account-btn-box{
+  margin-top: 5rem;
+}
+.loging-logo{
+  margin-top: 2rem;
+  display: flex ;
+  margin-bottom: 6rem;
+}
+.loging-logo img{
+  width: 4rem;
+}
+.loging-area{
+  height: 100%;
+}
+.errorMessage{
+  font-size: 13px;
+}
+}
