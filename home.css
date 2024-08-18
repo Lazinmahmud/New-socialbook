@@ -28,6 +28,58 @@
 body{
   background: var(--body-color);
 }
+.mobail-nav{
+  width: 100%;
+  height: 6rem;
+  background: var(--post-bg-color);
+  box-shadow: 0 0 4px rgba(0,0,0,0.4);
+  position: fixed ;
+  top: -1px;
+  z-index: 1;
+  display: none;
+}
+.nav-top{
+  width: 100%;
+  height: 2.5rem;
+  display: flex;
+  align-items: center ;
+  padding: 10px;
+}
+.nav-top img{
+  width: 140px;
+}
+.nav-bottom{
+  width: 100%;
+  height: 3.5rem;
+  display: flex;
+  align-items: center ;
+  gap: 5px;
+  
+}
+.nav-mobail{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center ;
+  justify-content: center;
+}
+.nav-mobail img{
+  width: 1.6rem;
+  display: none;
+}
+.nav-menu{
+  width: 35px;
+  height: 35px;
+  background: var(--off-white-color);
+  border-radius: 50%;
+}
+.nav-menu img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--main-color);
+}
 nav {
   width: 100%;
   height: 65px;
@@ -728,12 +780,14 @@ nav {
   height: 50px;
   background: var(--off-white-color);
   border-radius: 50%;
+  animation: pulse 1s infinite alternate;
 }
 .loading-bar{
   width: 30%;
   height: 12px;
   background: var(--off-white-color);
   border-radius: 2rem;
+  animation: pulse 1s infinite alternate;
 }
 .bar-container{
   width: 70%;
@@ -754,6 +808,8 @@ nav {
   height: 14px;
   background: var(--off-white-color);
   border-radius: 2rem;
+  animation: pulse 1s infinite alternate;
+  
 }
 .post-comment-container{
   width: 100%;
@@ -801,6 +857,17 @@ nav {
 .comment-inp-box i:active{
   opacity: 0.60;
 }
+@keyframes pulse {
+  0% {
+    opacity: 1.0;
+  }
+  50% {
+    opacity: 0.30; 
+  }
+  100% {
+    opacity: 1.1; 
+  }
+}
 
 
 
@@ -816,8 +883,17 @@ nav {
 body {
  font-size: 16px;
 }
+nav{
+  display: none;
+}
+.mobail-nav{
+  display: block;
+}
+.nav-mobail img{
+  display: block;
+}
 .main-container{
-  margin-top: 4rem;
+  margin-top: 6rem;
 }
 .main-content{
   width: 100%;
@@ -954,8 +1030,26 @@ body {
 .follower-container p{
   font-size: 13px;
 }
-
-
+.loading-profile{
+  height: 45px;
+  width: 45px;
+}
+.loading-bar{
+  width: 30%;
+  height: 10px;
+}
+.bar{
+  width: 25%;
+  height: 10px;
+}
+.loading-bottom-bar{
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+  padding-bottom: 10px;
+}
+.like-box{
+  padding: 5px;
+}
 
 
 
