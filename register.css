@@ -213,3 +213,60 @@ body{
   border: 1px solid red;
   display: none;
 }
+@media only screen and (max-width: 767px) {
+.logo-img-container{
+  display: none;
+}
+#MainForm{
+  margin-top: 0;
+  width: 100%;
+  box-shadow: none;
+  height: 100vh;
+}
+.form-header{
+  border-bottom: 0;
+}
+.form-container{
+  padding-bottom: 0;
+}
+#fnameInp{
+  width: 100%;
+  padding: 18px;
+}
+#lnameInp{
+  width: 100%;
+  margin-left: 0;
+  padding: 18px;
+}
+#emailInp{
+  padding: 18px;
+}
+
+#passwordInp{
+  padding: 18px;
+}
+#day{
+  width: 31%;
+}
+#year{
+  width: 31%;
+}
+#month{
+  width: 31%;
+}
+.singup-btn{
+  background: #28a745;
+  padding: 14px;
+  width: 100%;
+  border-radius: 2rem;
+  margin-left: 0;
+}
+.loging-btn{
+  margin-top: 1rem;
+  background: var(--main-color);
+  padding: 14px;
+  width: 100%;
+  border-radius: 2rem;
+  margin-left: 0;
+}
+}
