@@ -22,7 +22,11 @@
     
     <div class="loging-right">
       
+      
       <form id="MainForm">
+        <div class="loging-logo">
+          <img src="logo-circle.png">
+        </div>
     <input type="email" id="emailInp" placeholder="Email address">
     <p class="errorMessage" id="emailError"></p>
     <input type="password" id="passwordInp" placeholder="Password">
@@ -44,93 +48,104 @@
   
   
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-  import { getDatabase, get, ref, child } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
-  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+  // Firebase Initialization and Setup
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getDatabase, get, ref, child } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDLiT3pWoHy1IK3StGdJQsiVndCSgl7XB8",
-    authDomain: "socialbook-69ec5.firebaseapp.com",
-    databaseURL: "https://socialbook-69ec5-default-rtdb.firebaseio.com",
-    projectId: "socialbook-69ec5",
-    storageBucket: "socialbook-69ec5.appspot.com",
-    messagingSenderId: "720368891227",
-    appId: "1:720368891227:web:ba2f4111a3b15ece5b967e"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyDLiT3pWoHy1IK3StGdJQsiVndCSgl7XB8",
+  authDomain: "socialbook-69ec5.firebaseapp.com",
+  databaseURL: "https://socialbook-69ec5-default-rtdb.firebaseio.com",
+  projectId: "socialbook-69ec5",
+  storageBucket: "socialbook-69ec5.appspot.com",
+  messagingSenderId: "720368891227",
+  appId: "1:720368891227:web:ba2f4111a3b15ece5b967e"
+};
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase();
-  const auth = getAuth(app);
-  const dbref = ref(db);
-  
-  let EmailInp = document.getElementById("emailInp");
-  let PassInp = document.getElementById("passwordInp");
-  let MainForm = document.getElementById("MainForm");
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getDatabase();
+const auth = getAuth(app);
+const dbref = ref(db);
 
-  function clearErrorMessages() {
-    document.getElementById('emailError').textContent = '';
-    document.getElementById('passwordError').textContent = '';
+let EmailInp = document.getElementById("emailInp");
+let PassInp = document.getElementById("passwordInp");
+let MainForm = document.getElementById("MainForm");
+
+// Function to clear error messages
+function clearErrorMessages() {
+  document.getElementById('emailError').textContent = '';
+  document.getElementById('passwordError').textContent = '';
+}
+
+// SignIn Function
+let SignInUser = evt => {
+  evt.preventDefault();
+
+  // Clear previous error messages
+  clearErrorMessages();
+
+  // Simple validation
+  let isValid = true;
+  if (!EmailInp.value) {
+    document.getElementById('emailError').textContent = 'Email is required.';
+    isValid = false;
+  } else if (!validateEmail(EmailInp.value)) {
+    document.getElementById('emailError').textContent = 'Invalid email format.';
+    isValid = false;
   }
 
-  let SignInUser = evt => {
-    evt.preventDefault();
+  if (!PassInp.value) {
+    document.getElementById('passwordError').textContent = 'Password is required.';
+    isValid = false;
+  }
 
-    // Clear previous error messages
-    clearErrorMessages();
+  if (!isValid) return;
 
-    // Simple validation
-    let isValid = true;
-    if (!EmailInp.value) {
-      document.getElementById('emailError').textContent = 'Email is required.';
-      isValid = false;
-    } else if (!validateEmail(EmailInp.value)) {
-      document.getElementById('emailError').textContent = 'Invalid email format.';
-      isValid = false;
-    }
-
-    if (!PassInp.value) {
-      document.getElementById('passwordError').textContent = 'Password is required.';
-      isValid = false;
-    }
-
-    if (!isValid) return;
-
-    // Sign in with Firebase
-    signInWithEmailAndPassword(auth, EmailInp.value, PassInp.value)
-      .then((credentials) => {
-        get(child(dbref, 'UserAuthList/' + credentials.user.uid)).then((snapshot) => {
-          if (snapshot.exists()) {
-            sessionStorage.setItem("user-info", JSON.stringify({
-              firstName: snapshot.val().firstName,
-              lastName: snapshot.val().lastName
-            }));
-            sessionStorage.setItem("user-creds", JSON.stringify(credentials.user));
-            window.location.href = 'home.html';
-          }
-        });
-      })
-      .catch((error) => {
-        document.getElementById('passwordError').textContent = error.message
-        
-        console.log(error.code);
-        console.log(error.message);
+  // Sign in with Firebase
+  signInWithEmailAndPassword(auth, EmailInp.value, PassInp.value)
+    .then((credentials) => {
+      get(child(dbref, 'UserAuthList/' + credentials.user.uid)).then((snapshot) => {
+        if (snapshot.exists()) {
+          localStorage.setItem("user-info", JSON.stringify({
+            firstName: snapshot.val().firstName,
+            lastName: snapshot.val().lastName
+          }));
+          localStorage.setItem("user-creds", JSON.stringify(credentials.user));
+          window.location.href = 'home.html';
+        }
       });
-  };
+    })
+    .catch((error) => {
+      document.getElementById('passwordError').textContent = error.message;
+      console.log(error.code);
+      console.log(error.message);
+    });
+};
 
-  function validateEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
+// Email validation function
+function validateEmail(email) {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email);
+}
+
+// Handle input to clear error messages
+function handleInput(event) {
+  clearErrorMessages();
+}
+
+// Check if user is already logged in
+document.addEventListener("DOMContentLoaded", function() {
+  if (localStorage.getItem("user-creds")) {
+    window.location.href = 'home.html';
   }
+});
 
-  function handleInput(event) {
-    clearErrorMessages();
-  }
-
-  EmailInp.addEventListener('input', handleInput);
-  PassInp.addEventListener('input', handleInput);
-
-  MainForm.addEventListener('submit', SignInUser);
+// Event listeners for input and form submission
+EmailInp.addEventListener('input', handleInput);
+PassInp.addEventListener('input', handleInput);
+MainForm.addEventListener('submit', SignInUser);
 </script>
   
   
