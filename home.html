@@ -428,10 +428,10 @@
             ${imageUrl ? `<div class="post-img"><img src="${imageUrl}" id="databaseImg"></div>` : ''}
             <div class="post-activity-container">
               <div class="post-activity-box ">
-                <div onclick="toggleLike()" class="like-box ">
-                  <img id="likeGray" src="like.png">
-                  <img id="likeBlue" src="like-blue.png">
-                  <h4 id="likeText">Like</h4>
+                <div onclick="toggleLike('${postId}')" class="like-box " id="like-box-${postId}">
+                  <img id="likeGray-${postId}" src="like.png">
+                  <img id="likeBlue-${postId}" src="like-blue.png" style="display:none;">
+                  <h4 id="likeText-${postId}">Like</h4>
                 </div>
                 <div class="like-box ">
                   <img src="comment.png">
@@ -461,7 +461,7 @@
   }
 });
 
-// Function to format time as relative time (e.g., "1m ago")
+
 function formatRelativeTime(isoDate) {
   const now = new Date();
   const postTime = new Date(isoDate);
@@ -530,10 +530,10 @@ window.addEventListener('load', () => {
             ${imageHTML}
             <div class="post-activity-container">
               <div class="post-activity-box ">
-                <div onclick="toggleLike()" class="like-box ">
-                  <img id="likeGray" src="like.png">
-                  <img id="likeBlue" src="like-blue.png">
-                  <h4 id="likeText">Like</h4>
+                <div onclick="toggleLike('${postId}')" class="like-box " id="like-box-${postId}">
+                  <img id="likeGray-${postId}" src="like.png">
+                  <img id="likeBlue-${postId}" src="like-blue.png" style="display:none;">
+                  <h4 id="likeText-${postId}">Like</h4>
                 </div>
                 <div class="like-box ">
                   <img src="comment.png">
