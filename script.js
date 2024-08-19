@@ -216,3 +216,75 @@ notificationNav.addEventListener('click', function(){
   underline.style.marginLeft = '66%'
 });
 
+
+//mobail screen nav bar icon 
+
+let homeBlueM = document.getElementById('homeBlueM');
+
+let homeGrayM = document.getElementById('homeGrayM');
+let profileGrayM = document.getElementById('profileGrayM');
+let profileBlueM = document.getElementById('profileBlueM');
+let notiGrayM = document.getElementById('notiGrayM');
+let notiBlueM = document.getElementById('notiBlueM');
+
+let homNavM = document.getElementById('homNavM');
+let profileNavM = document.getElementById('profileNavM');
+let notiNavM = document.getElementById('notiNavM');
+let menuNavM = document.getElementById('menuNavM');
+let navMenuImg = document.querySelector('.nav-menu img');
+
+profileNavM.addEventListener('click', function(){
+  profileGrayM.style.display = 'none';
+  profileBlueM.style.display = 'block';
+  homeBlueM.style.display = 'none';
+  homeGrayM.style.display = 'block';
+  notiGrayM.style.display = 'block';
+  notiBlueM.style.display = 'none';
+  navMenuImg.style.border = '0px solid var(--main-color)';
+  
+  document.querySelector('.profile-page-container').style.display = 'block'
+  document.querySelector('.main-container').style.display = 'none'
+  document.querySelector('.mobail-nav').style.marginTop = '-3rem'
+});
+homNavM.addEventListener('click', function(){
+  homeGrayM.style.display = 'none';
+  homeBlueM.style.display = 'block';
+  profileBlueM.style.display = 'none';
+  profileGrayM.style.display = 'block';
+  notiGrayM.style.display = 'block';
+  notiBlueM.style.display = 'none';
+  navMenuImg.style.border = '0px solid var(--main-color)';
+  
+  document.querySelector('.profile-page-container').style.display = 'none'
+  document.querySelector('.main-container').style.display = 'flex'
+  document.querySelector('.mobail-nav').style.marginTop = '0'
+});
+
+notiNavM.addEventListener('click', function(){
+  homeBlueM.style.display = 'none';
+  homeGrayM.style.display = 'block';
+  profileBlueM.style.display = 'none';
+  profileGrayM.style.display = 'block';
+  notiGrayM.style.display = 'none';
+  notiBlueM.style.display = 'block';
+  navMenuImg.style.border = '0px solid var(--main-color)';
+  
+  document.querySelector('.profile-page-container').style.display = 'none'
+  document.querySelector('.main-container').style.display = 'flex'
+  document.querySelector('.mobail-nav').style.marginTop = '-3rem'
+});
+
+menuNavM.addEventListener('click', function(){
+  homeBlueM.style.display = 'none';
+  homeGrayM.style.display = 'block';
+  profileBlueM.style.display = 'none';
+  profileGrayM.style.display = 'block';
+  notiGrayM.style.display = 'block';
+  notiBlueM.style.display = 'none';
+  navMenuImg.style.border = '2px solid var(--main-color)';
+  
+  document.querySelector('.mobail-nav').style.marginTop = '-3rem'
+  
+  document.querySelector('.profile-page-container').style.display = 'none'
+  document.querySelector('.main-container').style.display = 'flex'
+});
