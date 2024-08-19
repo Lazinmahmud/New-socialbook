@@ -300,7 +300,7 @@
           <h4 class="greet"></h4>
         </div>
         <div class="post-text-input ">
-          <textarea id="textareaPlaceholder" cols="3" rows="3" placeholder="What do you think,"></textarea>
+          <textarea id="textareaPlaceholder" cols="3" rows="3" placeholder="What do you think"></textarea>
         </div>
         <label for="fileInput">
         <div class="post-img-select-box ">
@@ -639,8 +639,8 @@ window.addEventListener('load', () => {
                 element.innerText = `${UserInfo.firstName} ${UserInfo.lastName}`;
             });
             // Set the placeholder text with user's first name
-            PostTextarea.innerText = `What do you think, ${UserInfo.firstName}?`;
-            textareaPlaceholder.placeholder = `What do you think, ${UserInfo.firstName}?`
+            PostTextarea.innerText = `What do you think ${UserInfo.firstName}?`;
+            textareaPlaceholder.placeholder = `What do you think ${UserInfo.firstName}?`
             nameInput.value = `${UserInfo.firstName} ${UserInfo.lastName}`;
         }
     }
