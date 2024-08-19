@@ -57,21 +57,42 @@ function toggleDropdown() {
 }
 
 
-function toggleLike() {
-    const likeGray = document.getElementById('likeGray');
-    const likeBlue = document.getElementById('likeBlue');
-    const likeText = document.getElementById('likeText');
 
-    if (likeGray.style.display === 'block' || likeGray.style.display === '') {
-        likeGray.style.display = 'none';
-        likeBlue.style.display = 'block';
-        likeText.style.color = 'var(--main-color)';
-    } else {
-        likeGray.style.display = 'block';
-        likeBlue.style.display = 'none';
-        likeText.style.color = '#808080';
-    }
+
+ let likeCounts = {}; // Object to store like counts for each post
+
+function toggleLike(postId) {
+  const likeBox = document.getElementById(`like-box-${postId}`);
+  const likeGray = document.getElementById(`likeGray-${postId}`);
+  const likeBlue = document.getElementById(`likeBlue-${postId}`);
+  const likeText = document.getElementById(`likeText-${postId}`);
+
+  // Initialize like count if not already set
+  if (!likeCounts[postId]) {
+    likeCounts[postId] = 0;
+  }
+
+  if (likeBlue.style.display === 'none') {
+    // User likes the post
+    likeBlue.style.display = 'block';
+    likeGray.style.display = 'none';
+    likeCounts[postId]++;
+  } else {
+    // User unlikes the post
+    likeBlue.style.display = 'none';
+    likeGray.style.display = 'block';
+    likeCounts[postId] = Math.max(likeCounts[postId] - 1, 0); // Ensure count doesn't go below 0
+  }
+
+  // Update like text
+  likeText.textContent = likeCounts[postId] === 0 ? 'Like' : likeCounts[postId];
+
+
 }
+
+
+
+
 
 
 // post image select and img display 
