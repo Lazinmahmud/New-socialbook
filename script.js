@@ -254,7 +254,14 @@ let notiNavM = document.getElementById('notiNavM');
 let menuNavM = document.getElementById('menuNavM');
 let navMenuImg = document.querySelector('.nav-menu img');
 
+
+
+// Create an audio object
+const tapSound = new Audio('tap.mp3');
+
+// Profile Navigation Click
 profileNavM.addEventListener('click', function(){
+  tapSound.play(); // Play tap sound
   profileGrayM.style.display = 'none';
   profileBlueM.style.display = 'block';
   homeBlueM.style.display = 'none';
@@ -267,7 +274,10 @@ profileNavM.addEventListener('click', function(){
   document.querySelector('.main-container').style.display = 'none'
   document.querySelector('.mobail-nav').style.marginTop = '-3rem'
 });
+
+// Home Navigation Click
 homNavM.addEventListener('click', function(){
+  tapSound.play(); // Play tap sound
   homeGrayM.style.display = 'none';
   homeBlueM.style.display = 'block';
   profileBlueM.style.display = 'none';
@@ -281,7 +291,9 @@ homNavM.addEventListener('click', function(){
   document.querySelector('.mobail-nav').style.marginTop = '0'
 });
 
+// Notifications Navigation Click
 notiNavM.addEventListener('click', function(){
+  tapSound.play(); // Play tap sound
   homeBlueM.style.display = 'none';
   homeGrayM.style.display = 'block';
   profileBlueM.style.display = 'none';
@@ -295,7 +307,9 @@ notiNavM.addEventListener('click', function(){
   document.querySelector('.mobail-nav').style.marginTop = '-3rem'
 });
 
+// Menu Navigation Click
 menuNavM.addEventListener('click', function(){
+  tapSound.play(); // Play tap sound
   homeBlueM.style.display = 'none';
   homeGrayM.style.display = 'block';
   profileBlueM.style.display = 'none';
