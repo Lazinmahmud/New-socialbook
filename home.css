@@ -32,7 +32,7 @@ body{
   width: 100%;
   height: 6rem;
   background: var(--post-bg-color);
-  box-shadow: 0 0 4px rgba(0,0,0,0.4);
+  border-bottom: 1px solid #cccc;
   position: fixed ;
   top: -1px;
   z-index: 1;
@@ -767,7 +767,7 @@ nav {
   opacity: 0.60;
 }
 .loading-post-container{
-  display: none;
+  
 }
 .loading-post{
   width: 100%;
@@ -877,8 +877,25 @@ nav {
     opacity: 1.1; 
   }
 }
-
-
+.post-upload-pogress-container{
+  width: 100%;
+  background: var(--post-bg-color);
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 5px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.post-upload-pogress-container img{
+  width: 1.8rem;
+  height: 1.8rem;
+  object-fit: cover;
+}
+.post-upload-pogress-container p{
+  font-size: 14px;
+}
 
 
 
@@ -1059,8 +1076,17 @@ nav{
 .like-box{
   padding: 5px;
 }
-
-
+.post-upload-pogress-container{
+  border-bottom: 8px solid #cccc;
+  margin-bottom: 0px;
+  padding: 12px;
+  background: var(--post-bg-color);
+  box-shadow: none;
+  border-radius: 0;
+}
+.post-upload-pogress-container p{
+  font-size: 12px;
+}
 
 
 }
