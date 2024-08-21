@@ -38,7 +38,7 @@
     
     <div class="nav-right">
       <div class="profile-circle " onclick="toggleDropdown()">
-      <img src="post4.jpg ">
+      <img class="profile-img">
     </div>
     </div>
     
@@ -65,7 +65,7 @@
       </div>
       <div id="menuNavM" class="nav-mobail">
         <div class="nav-menu">
-          <img src="post.jpg">
+          <img class="profile-img">
         </div>
       </div>
       
@@ -77,7 +77,9 @@
   <div class="drop-down-menu " id="dropdownMenu">
     
     <div class="user-profile-and-name ">
-      <div class="menu-profile "></div>
+      <div class="menu-profile ">
+        <img class="profile-img">
+      </div>
       <h4 class="greet"></h4>
     </div>
     <div class="menu-item ">
@@ -111,16 +113,14 @@
     <div class="left-sidebar"></div>
    <div class="main-content">
      <div class="post-create-container ">
-     <div class="post-crte-profie-cntnr ">
-       <div class="profile-box-pst-cret">
-       <div class="profile-circle post-create " >
-        <img src="post4.jpg ">
+       <div class="post-create-profile-box">
+         <div class="post-create-profile">
+           <img class="profile-img">
+         </div>
        </div>
-       </div>
-       <div class="textarea ">
+     <div class="textarea ">
          <p id="postTextarea">What do you think?</p>
        </div>
-      </div>
     </div>
     <!---
     <div class="post-upload-pogress-container">
@@ -226,10 +226,10 @@
     <div class="profile-page ">
       <div class="profile-into-container ">
         <div class="cover-photo-container ">
-          
+          <img class="cover-img">
         </div>
         <div class="profile-photo-circle">
-  <img id="profilePhoto">
+  <img class="profile-img">
 </div>
         <button type="button" class="Edit-profile-btn ">Edit profile</button>
         <div class="profile-name-box ">
@@ -301,7 +301,7 @@
       <div class="popup-content-box ">
         <div class="popup-profile-box ">
           <div class="popup-profile ">
-            <img src="post4.jpg ">
+            <img class="profile-img">
           </div>
           <h4 class="greet"></h4>
         </div>
@@ -380,13 +380,14 @@
       }
     }, 10);
 
-    const userId = 'user123';
+    const userId = 'user123';  // Replace with actual user ID
     const userFirstName = UserInfo.firstName;
     const userLastName = UserInfo.lastName;
     const postId = new Date().getTime(); // Unique post ID based on timestamp
     const uploadTime = new Date().toISOString(); // Save current time
 
     let imageUrl = '';
+    let profileImageUrl = '';
 
     // Create the post upload progress container
     const progressContainer = document.createElement('div');
@@ -429,8 +430,39 @@
       });
     };
 
+    // Fetch profile image from Firebase Realtime Database
+    const fetchProfileImage = () => {
+      return new Promise((resolve, reject) => {
+        let UserCreds = JSON.parse(localStorage.getItem("user-creds"));
+        if (UserCreds && UserCreds.email) {
+          const email = UserCreds.email;
+          const formattedEmail = email.replace('.', ','); // Format email for database key
+          const userProfileDetailsRef = dbRef(database, 'User_Profile_details/' + formattedEmail);
+
+          get(userProfileDetailsRef).then(snapshot => {
+            if (snapshot.exists()) {
+              const data = snapshot.val();
+              if (data.profileImageURL) {
+                profileImageUrl = data.profileImageURL;
+              }
+              resolve();
+            } else {
+              console.log('No profile details found for this user.');
+              resolve(); // Resolve even if no data found
+            }
+          }).catch(error => {
+            console.error('Error fetching profile image:', error);
+            reject(error);
+          });
+        } else {
+          console.error('No user credentials found in local storage.');
+          resolve(); // Resolve even if no user credentials
+        }
+      });
+    };
+
     // Save text and user details to Firebase Realtime Database
-    uploadImage().then(() => {
+    Promise.all([uploadImage(), fetchProfileImage()]).then(() => {
       return set(dbRef(database, 'posts/' + postId), {
         userId: userId,
         firstName: userFirstName,
@@ -438,7 +470,8 @@
         text: text,
         timestamp: postId,
         uploadTime: uploadTime,
-        imageUrl: imageUrl // Save image URL if available
+        imageUrl: imageUrl, // Save image URL if available
+        profileImageUrl: profileImageUrl // Save profile image URL
       });
     }).then(() => {
 
@@ -451,9 +484,9 @@
       postContainer.className = 'post';
       postContainer.innerHTML = `
         <div class="post-header_and_post_content">
-            <div class="profile-box ">
+            <div class="profile-box">
               <div class="post-profile">
-
+                <img src="${profileImageUrl || 'default-profile.jpg'}" alt="Profile Image">
               </div>
             </div>
             <div class="post-userName-andtime">
@@ -461,8 +494,8 @@
               <p class="span" id="post-time-${postId}">${formatRelativeTime(uploadTime)}</p>
             </div>
             <div class="post-menu">
-       <i class='bx bx-dots-vertical-rounded'></i>
-     </div>
+              <i class='bx bx-dots-vertical-rounded'></i>
+            </div>
           </div>
           <div class="post-text">
               <p>${text}</p>
@@ -484,7 +517,6 @@
                   <h4>Share</h4>
                 </div>
               </div>
-
             </div>`;
 
       // Insert the new post after the progress container
@@ -553,12 +585,17 @@ window.addEventListener('load', () => {
         
         // Include the image URL if it exists
         const imageHTML = post.imageUrl ? `<div class="post-img"><img src="${post.imageUrl}" id="databaseImg"></div>` : '';
+        
+        // Include the profile image URL or a default image if it doesn't exist
+        const profileImageHTML = post.profileImageUrl 
+            ? `<img src="${post.profileImageUrl}" alt="Profile Image">` 
+            : `<img src="default-profile.jpg" alt="Default Profile Image">`;
 
         postElement.innerHTML = `
           <div class="post-header_and_post_content">
             <div class="profile-box ">
               <div class="post-profile">
-                
+                ${profileImageHTML}
               </div>
             </div>
             <div class="post-userName-andtime">
@@ -566,8 +603,8 @@ window.addEventListener('load', () => {
               <p class="span" id="post-time-${postId}">${formatRelativeTime(post.uploadTime)}</p>
             </div>
             <div class="post-menu">
-       <i class='bx bx-dots-vertical-rounded'></i>
-     </div>
+              <i class='bx bx-dots-vertical-rounded'></i>
+            </div>
           </div>
           <div class="post-text">
               <p>${post.text}</p>
@@ -589,73 +626,124 @@ window.addEventListener('load', () => {
                   <h4>Share</h4>
                 </div>
               </div>
-              
             </div>`;
         
         postContainer.insertAdjacentElement('afterend', postElement);
       }
 
-      // পোস্ট লোড হয়ে গেলে loading spinner লুকাবে
+      // Hide the loading spinner after posts are loaded
       loadingContainer.style.display = 'none';
     }
   }).catch(error => {
     console.error("Error fetching posts: ", error);
 
-    // কোনো ত্রুটি হলে loading spinner লুকাবে
+    // Hide the loading spinner in case of an error
     loadingContainer.style.display = 'none';
   });
 });
   
   
   
-  
-  document.querySelector('.edit-save-btn').addEventListener('click', function() {
-    const file = document.querySelector("#profileInp").files[0];
-    
-    if (file) {
-      const name = new Date().getTime() + '-' + file.name;
-      const storageRef = ref(storage, name);
-      const metadata = {
-        contentType: file.type
-      };
+  // profile and cover image upload 
+  document.querySelector('.edit-save-btn').addEventListener('click', async () => {
+    const profileFile = document.getElementById('profileInp').files[0];
+    const coverFile = document.getElementById('coverImgInp').files[0];
 
-      uploadBytes(storageRef, file, metadata)
-        .then(snapshot => getDownloadURL(snapshot.ref))
-        .then(url => {
-          console.log(url);
-          alert("Profile image upload successful");
+    let UserCreds = JSON.parse(localStorage.getItem("user-creds"));
+    if (UserCreds && UserCreds.email) {
+        const email = UserCreds.email;
+        const formattedEmail = email.replace('.', ',');
+        const userProfileDetailsRef = dbRef(database, 'User_Profile_details/' + formattedEmail);
 
-          // Save URL to Realtime Database
-          const userId = "user123"; // Replace with the current user ID
-          set(dbRef(database, 'users/' + userId + '/profileImage'), url);
+        try {
+            // Fetch the current data to preserve any existing values
+            const snapshot = await get(userProfileDetailsRef);
+            let currentData = {};
+            if (snapshot.exists()) {
+                currentData = snapshot.val();
+            }
 
-          const profilePhoto = document.querySelector("#profilePhoto");
-          profilePhoto.src = url;
-        })
-        .catch(error => {
-          console.error("Error uploading image: ", error);
-        });
-    } else {
-      alert("Please select a profile image to upload.");
-    }
-  });
+            // Update Profile Image if a new one is provided
+            if (profileFile) {
+                const profileImgRef = ref(storage, 'profileImages/' + profileFile.name);
+                const uploadResult = await uploadBytes(profileImgRef, profileFile);
+                const profileDownloadURL = await getDownloadURL(uploadResult.ref);
+                currentData.profileImageURL = profileDownloadURL;
+            }
 
-  // Fetch the URL from Realtime Database on page load
-  window.addEventListener('load', () => {
-    const userId = "user123"; // Replace with the current user ID
-    get(dbRef(database, 'users/' + userId + '/profileImage'))
-      .then(snapshot => {
-        if (snapshot.exists()) {
-          const url = snapshot.val();
-          const profilePhoto = document.querySelector("#profilePhoto");
-          profilePhoto.src = url;
+            // Update Cover Image if a new one is provided
+            if (coverFile) {
+                const coverImgRef = ref(storage, 'coverImages/' + coverFile.name);
+                const coverUploadResult = await uploadBytes(coverImgRef, coverFile);
+                const coverDownloadURL = await getDownloadURL(coverUploadResult.ref);
+                currentData.coverImageURL = coverDownloadURL;
+            }
+
+            // Save the updated data back to the database
+            await set(userProfileDetailsRef, currentData);
+
+            alert('Profile and/or cover images updated successfully!');
+        } catch (error) {
+            console.error('Error uploading images:', error);
         }
-      })
-      .catch(error => {
-        console.error("Error fetching image URL: ", error);
-      });
-  });
+    } else {
+        console.error('No email found in user creds.');
+    }
+});
+  
+  
+  // profile and cover photo fetch 
+  const loadProfileAndCoverImages = async () => {
+    let UserCreds = JSON.parse(localStorage.getItem("user-creds"));
+    if (UserCreds && UserCreds.email) {
+        const email = UserCreds.email;
+        const formattedEmail = email.replace('.', ','); // Format email for database key
+        const userProfileDetailsRef = dbRef(database, 'User_Profile_details/' + formattedEmail);
+
+        try {
+            const snapshot = await get(userProfileDetailsRef);
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                
+                // Load Profile Image
+                if (data.profileImageURL) {
+                    const profileImageURL = data.profileImageURL;
+                    const profileImages = document.querySelectorAll('.profile-img');
+                    profileImages.forEach(img => {
+                        img.src = profileImageURL;
+                    });
+                } else {
+                    console.log('No profile image found for this user.');
+                }
+
+                // Load Cover Image
+                if (data.coverImageURL) {
+                    const coverImageURL = data.coverImageURL;
+                    const coverImages = document.querySelectorAll('.cover-img');
+                    coverImages.forEach(img => {
+                        img.src = coverImageURL;
+                    });
+                } else {
+                    console.log('No cover image found for this user.');
+                }
+            } else {
+                console.log('No profile details found for this user.');
+            }
+        } catch (error) {
+            console.error('Error fetching profile and cover image URLs:', error);
+        }
+    } else {
+        console.error('No user credentials found in local storage.');
+    }
+};
+
+window.addEventListener('load', loadProfileAndCoverImages);
+  
+  
 </script>
+  
+  
+  
   
   <script>
     
