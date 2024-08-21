@@ -419,7 +419,7 @@
             };
             reader.readAsDataURL(file);
         } else {
-            progressImage.src = 'post.jpg'; // Default image if no file is selected
+            progressImage.src = '';
         }
 
         progressContainer.appendChild(progressImage);
@@ -477,7 +477,7 @@
 
         // Save text and user details to Firebase Realtime Database
         Promise.all([uploadImage(), fetchProfileImage()]).then(() => {
-            return set(dbRef(database, 'posts/' + postId), {
+            return set(dbRef(database, 'All_Post/' + postId), {
                 userId: userId,
                 firstName: userFirstName,
                 lastName: userLastName,
@@ -511,9 +511,7 @@
             const postSound = document.getElementById('postSound');
             postSound.play();
 
-            const postContainer = document.createElement('div');
-            postContainer.className = 'post';
-            postContainer.innerHTML = `
+            const postContainerHTML = `
                 <div class="post-header_and_post_content">
                     <div class="profile-box">
                         <div class="post-profile">
@@ -550,8 +548,21 @@
                     </div>
                 </div>`;
 
-            progressContainer.insertAdjacentElement('afterend', postContainer);
+            const postContainer1 = document.createElement('div');
+            postContainer1.className = 'post';
+            postContainer1.innerHTML = postContainerHTML;
+
+            const postContainer2 = postContainer1.cloneNode(true); // Clone for the second insertion
+
+            // Insert under post-create-container
+            progressContainer.insertAdjacentElement('afterend', postContainer1);
             progressContainer.style.display = 'none';
+
+            // Insert within profile-page-post
+            const profilePagePost = document.querySelector('.profile-page-post');
+            if (profilePagePost) {
+                profilePagePost.insertAdjacentElement('afterbegin', postContainer2);
+            }
 
             document.getElementById('textareaPlaceholder').value = '';
             document.getElementById('fileInput').value = '';
@@ -600,74 +611,134 @@ window.addEventListener('load', () => {
   const loadingContainer = document.querySelector('.loading-post-container');
   loadingContainer.style.display = 'block';
 
-  get(dbRef(database, 'posts')).then(snapshot => {
-    if (snapshot.exists()) {
-      const posts = snapshot.val();
-      const postContainer = document.querySelector('.post-create-container');
+  let UserCreds = JSON.parse(localStorage.getItem("user-creds"));
+  if (UserCreds && UserCreds.email) {
+    const email = UserCreds.email;
+    const formattedEmail = email.replace('.', ','); // Format email for database key
+    
+    // Fetch and display all posts from 'posts'
+    get(dbRef(database, 'All_Post')).then(snapshot => {
+      if (snapshot.exists()) {
+        const posts = snapshot.val();
+        const postContainer = document.querySelector('.post-create-container');
 
-      for (const postId in posts) {
-        const post = posts[postId];
-        const postElement = document.createElement('div');
-        postElement.className = 'post';
-        
-        // Include the image URL if it exists
-        const imageHTML = post.imageUrl ? `<div class="post-img"><img src="${post.imageUrl}" id="databaseImg"></div>` : '';
-        
-        // Include the profile image URL or a default image if it doesn't exist
-        const profileImageHTML = post.profileImageUrl 
-            ? `<img src="${post.profileImageUrl}" alt="Profile Image">` 
-            : `<img src="default-profile.jpg" alt="Default Profile Image">`;
+        for (const postId in posts) {
+          const post = posts[postId];
+          const postElement = document.createElement('div');
+          postElement.className = 'post';
+          
+          const imageHTML = post.imageUrl ? `<div class="post-img"><img src="${post.imageUrl}" id="databaseImg"></div>` : '';
+          const profileImageHTML = post.profileImageUrl 
+              ? `<img src="${post.profileImageUrl}" alt="Profile Image">` 
+              : `<img src="default-profile.jpg" alt="Default Profile Image">`;
 
-        postElement.innerHTML = `
-          <div class="post-header_and_post_content">
-            <div class="profile-box ">
-              <div class="post-profile">
-                ${profileImageHTML}
-              </div>
-            </div>
-            <div class="post-userName-andtime">
-              <h4>${post.firstName} ${post.lastName}</h4>
-              <p class="span" id="post-time-${postId}">${formatRelativeTime(post.uploadTime)}</p>
-            </div>
-            <div class="post-menu">
-              <i class='bx bx-dots-vertical-rounded'></i>
-            </div>
-          </div>
-          <div class="post-text">
-              <p>${post.text}</p>
-            </div>
-            ${imageHTML}
-            <div class="post-activity-container">
-              <div class="post-activity-box ">
-                <div onclick="toggleLike('${postId}')" class="like-box " id="like-box-${postId}">
-                  <img id="likeGray-${postId}" src="like.png">
-                  <img id="likeBlue-${postId}" src="like-blue.png" style="display:none;">
-                  <h4 id="likeText-${postId}">Like</h4>
-                </div>
-                <div class="like-box ">
-                  <img src="comment.png">
-                  <h4>Comment</h4>
-                </div>
-                <div class="like-box ">
-                  <img src="share.png">
-                  <h4>Share</h4>
+          postElement.innerHTML = `
+            <div class="post-header_and_post_content">
+              <div class="profile-box ">
+                <div class="post-profile">
+                  ${profileImageHTML}
                 </div>
               </div>
-              
-            </div>`;
-        
-        postContainer.insertAdjacentElement('afterend', postElement);
+              <div class="post-userName-andtime">
+                <h4>${post.firstName} ${post.lastName}</h4>
+                <p class="span" id="post-time-${postId}">${formatRelativeTime(post.uploadTime)}</p>
+              </div>
+              <div class="post-menu">
+                <i class='bx bx-dots-vertical-rounded'></i>
+              </div>
+            </div>
+            <div class="post-text">
+                <p>${post.text}</p>
+              </div>
+              ${imageHTML}
+              <div class="post-activity-container">
+                <div class="post-activity-box ">
+                  <div onclick="toggleLike('${postId}')" class="like-box " id="like-box-${postId}">
+                    <img id="likeGray-${postId}" src="like.png">
+                    <img id="likeBlue-${postId}" src="like-blue.png" style="display:none;">
+                    <h4 id="likeText-${postId}">Like</h4>
+                  </div>
+                  <div class="like-box ">
+                    <img src="comment.png">
+                    <h4>Comment</h4>
+                  </div>
+                  <div class="like-box ">
+                    <img src="share.png">
+                    <h4>Share</h4>
+                  </div>
+                </div>
+              </div>`;
+          
+          postContainer.insertAdjacentElement('afterend', postElement);
+        }
       }
+    }).catch(error => {
+      console.error("Error fetching all posts: ", error);
+    });
 
-      // Hide the loading spinner after posts are loaded
+    // Fetch and display only logged-in user's posts from 'User_Posts'
+    get(dbRef(database, 'User_Posts/' + formattedEmail)).then(snapshot => {
+      if (snapshot.exists()) {
+        const userPosts = snapshot.val();
+        const profilePostContainer = document.querySelector('.profile-page-post');
+
+        for (const postId in userPosts) {
+          const post = userPosts[postId];
+          const postElement = document.createElement('div');
+          postElement.className = 'post';
+
+          const imageHTML = post.imageUrl ? `<div class="post-img"><img src="${post.imageUrl}" id="databaseImg"></div>` : '';
+          const profileImageHTML = post.profileImageUrl 
+              ? `<img src="${post.profileImageUrl}" alt="Profile Image">` 
+              : `<img src="default-profile.jpg" alt="Default Profile Image">`;
+
+          postElement.innerHTML = `
+            <div class="post-header_and_post_content">
+              <div class="profile-box ">
+                <div class="post-profile">
+                  ${profileImageHTML}
+                </div>
+              </div>
+              <div class="post-userName-andtime">
+                <h4>${post.firstName} ${post.lastName}</h4>
+                <p class="span" id="post-time-${postId}">${formatRelativeTime(post.uploadTime)}</p>
+              </div>
+              <div class="post-menu">
+                <i class='bx bx-dots-vertical-rounded'></i>
+              </div>
+            </div>
+            <div class="post-text">
+                <p>${post.text}</p>
+              </div>
+              ${imageHTML}
+              <div class="post-activity-container">
+                <div class="post-activity-box ">
+                  <div onclick="toggleLike('${postId}')" class="like-box " id="like-box-${postId}">
+                    <img id="likeGray-${postId}" src="like.png">
+                    <img id="likeBlue-${postId}" src="like-blue.png" style="display:none;">
+                    <h4 id="likeText-${postId}">Like</h4>
+                  </div>
+                  <div class="like-box ">
+                    <img src="comment.png">
+                    <h4>Comment</h4>
+                  </div>
+                  <div class="like-box ">
+                    <img src="share.png">
+                    <h4>Share</h4>
+                  </div>
+                </div>
+              </div>`;
+          
+          profilePostContainer.insertAdjacentElement('afterbegin', postElement);
+        }
+      }
+    }).catch(error => {
+      console.error("Error fetching user posts: ", error);
+    }).finally(() => {
+      // Hide the loading spinner after all posts are loaded
       loadingContainer.style.display = 'none';
-    }
-  }).catch(error => {
-    console.error("Error fetching posts: ", error);
-
-    // Hide the loading spinner in case of an error
-    loadingContainer.style.display = 'none';
-  });
+    });
+  }
 });
   
   
