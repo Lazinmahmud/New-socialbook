@@ -213,6 +213,12 @@ nav {
   background: var(--off-white-color);
   border-radius: 50%;
 }
+.menu-profile img{
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
 #greet{
   font-size: 18px;
 }
@@ -254,12 +260,28 @@ nav {
   background: var(--post-bg-color);
   margin-bottom: 20px;
   border-radius: 10px;
-}
-.post-crte-profie-cntnr{
-  width: 100%;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
+}
+.post-create-profile-box{
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.post-create-profile{
+  height: 50px;
+  width: 50px;
+  background: var(--off-white-color);
+  border-radius: 50%;
+}
+.post-create-profile img{
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 .textarea{
   width: 100%;
@@ -319,10 +341,6 @@ nav {
 }
 .post-menu i:active{
   opacity: 0.50;
-}
-.profile-box-pst-cret{
-  width: 50px;
-  height: 50px;
 }
 .profile-box {
   display: flex ;
@@ -1086,6 +1104,10 @@ nav{
 }
 .post-upload-pogress-container p{
   font-size: 12px;
+}
+.post-create-profile{
+  height: 43px;
+  width: 43px;
 }
 
 
