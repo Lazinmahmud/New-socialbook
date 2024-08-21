@@ -130,7 +130,7 @@
     
     <audio id="postSound" src="post-sound.mp3" preload="auto"></audio>
     
-<!--  <div class="post ">
+ <!----<div class="post ">
       <div class="post-header_and_post_content">
         <div class="profile-box ">
           <div class="post-profile">
@@ -168,19 +168,34 @@
           </div>
              </div>
                </div>
-          <div class="post-comment-container">
-            <div class="user-comment-profile">
-              <img >
-            </div>
-            <div class="comment-inp-box">
-              <input type="text" placeholder="Comment as lazim">
-              <i class='bx bxl-telegram'></i>
-            </div>
-          </div>
+          <div class="coment-display-container">
+            
          
+           <div class="user-coment-box">
+              <div class="user-comment-profile">
+                <img class="profile-img">
+              </div>
+              <div class="coment-content">
+                <h4></h4>
+                <p></p>
+              </div>
+              
+            </div>
+            
+          </div>
+          
+         <div class="post-comment-container">
+           <div class="comment-profile">
+             <img class="profile-img">
+           </div>
+           <div class="comment-inp-box">
+             <input type="text" placeholder="Write a public comment...">
+           </div>
+           <button class="comment-send-button" type="button"><i class='bx bxs-send' ></i></button>
+         </div>
                
-      </div>
-      ---->
+      </div>   ---->
+      
               
         
     <div class="loading-post-container">
@@ -244,6 +259,9 @@
           <p>•</p>
           <p><span class="follow-count">0</span> Followers</p>
         </div>
+      </div>
+      <div class="profile-page-post">
+        
       </div>
     </div>
   </div>
@@ -366,176 +384,185 @@
 });
   
   document.getElementById('uploadBtn').addEventListener('click', function() {
-  const text = document.getElementById('textareaPlaceholder').value;
-  const fileInput = document.getElementById('fileInput');
-  const file = fileInput.files[0];
+    const text = document.getElementById('textareaPlaceholder').value;
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
 
-  // Check if there is any text or an image selected
-  if (text || file) {
-    // Hide the .popup-opachity after 1 second
-    setTimeout(function() {
-      const popupOpachityElement = document.querySelector('.popup-opachity');
-      if (popupOpachityElement) {
-        popupOpachityElement.style.display = 'none';
-      }
-    }, 10);
-
-    const userId = 'user123';  // Replace with actual user ID
-    const userFirstName = UserInfo.firstName;
-    const userLastName = UserInfo.lastName;
-    const postId = new Date().getTime(); // Unique post ID based on timestamp
-    const uploadTime = new Date().toISOString(); // Save current time
-
-    let imageUrl = '';
-    let profileImageUrl = '';
-
-    // Create the post upload progress container
-    const progressContainer = document.createElement('div');
-    progressContainer.className = 'post-upload-pogress-container';
-    const progressImage = document.createElement('img');
-    const progressText = document.createElement('p');
-    progressText.textContent = 'Posting...';
-
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        progressImage.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    } else {
-      progressImage.src = 'post.jpg'; // Default image if no file is selected
-    }
-
-    progressContainer.appendChild(progressImage);
-    progressContainer.appendChild(progressText);
-
-    // Insert the progress container into the DOM at the top
-    const postCreateContainer = document.querySelector('.post-create-container');
-    postCreateContainer.insertAdjacentElement('afterend', progressContainer);
-
-    // Function to handle image upload
-    const uploadImage = () => {
-      return new Promise((resolve, reject) => {
-        if (file) {
-          const storageRef = ref(storage, 'images/' + postId + '-' + file.name);
-          uploadBytes(storageRef, file).then(snapshot => {
-            getDownloadURL(snapshot.ref).then(url => {
-              imageUrl = url;
-              resolve();
-            }).catch(reject);
-          }).catch(reject);
-        } else {
-          resolve();
-        }
-      });
-    };
-
-    // Fetch profile image from Firebase Realtime Database
-    const fetchProfileImage = () => {
-      return new Promise((resolve, reject) => {
-        let UserCreds = JSON.parse(localStorage.getItem("user-creds"));
-        if (UserCreds && UserCreds.email) {
-          const email = UserCreds.email;
-          const formattedEmail = email.replace('.', ','); // Format email for database key
-          const userProfileDetailsRef = dbRef(database, 'User_Profile_details/' + formattedEmail);
-
-          get(userProfileDetailsRef).then(snapshot => {
-            if (snapshot.exists()) {
-              const data = snapshot.val();
-              if (data.profileImageURL) {
-                profileImageUrl = data.profileImageURL;
-              }
-              resolve();
-            } else {
-              console.log('No profile details found for this user.');
-              resolve(); // Resolve even if no data found
+    if (text || file) {
+        setTimeout(function() {
+            const popupOpachityElement = document.querySelector('.popup-opachity');
+            if (popupOpachityElement) {
+                popupOpachityElement.style.display = 'none';
             }
-          }).catch(error => {
-            console.error('Error fetching profile image:', error);
-            reject(error);
-          });
+        }, 10);
+
+        const userId = 'user123';  // Replace with actual user ID
+        const userFirstName = UserInfo.firstName;
+        const userLastName = UserInfo.lastName;
+        const postId = new Date().getTime(); // Unique post ID based on timestamp
+        const uploadTime = new Date().toISOString(); // Save current time
+
+        let imageUrl = '';
+        let profileImageUrl = '';
+
+        // Create the post upload progress container
+        const progressContainer = document.createElement('div');
+        progressContainer.className = 'post-upload-pogress-container';
+        const progressImage = document.createElement('img');
+        const progressText = document.createElement('p');
+        progressText.textContent = 'Posting...';
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                progressImage.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
         } else {
-          console.error('No user credentials found in local storage.');
-          resolve(); // Resolve even if no user credentials
+            progressImage.src = 'post.jpg'; // Default image if no file is selected
         }
-      });
-    };
 
-    // Save text and user details to Firebase Realtime Database
-    Promise.all([uploadImage(), fetchProfileImage()]).then(() => {
-      return set(dbRef(database, 'posts/' + postId), {
-        userId: userId,
-        firstName: userFirstName,
-        lastName: userLastName,
-        text: text,
-        timestamp: postId,
-        uploadTime: uploadTime,
-        imageUrl: imageUrl, // Save image URL if available
-        profileImageUrl: profileImageUrl // Save profile image URL
-      });
-    }).then(() => {
+        progressContainer.appendChild(progressImage);
+        progressContainer.appendChild(progressText);
+        const postCreateContainer = document.querySelector('.post-create-container');
+        postCreateContainer.insertAdjacentElement('afterend', progressContainer);
 
-      // Play the post-sound.mp3 after the post is uploaded
-      const postSound = document.getElementById('postSound');
-      postSound.play();
+        // Function to handle image upload
+        const uploadImage = () => {
+            return new Promise((resolve, reject) => {
+                if (file) {
+                    const storageRef = ref(storage, 'images/' + postId + '-' + file.name);
+                    uploadBytes(storageRef, file).then(snapshot => {
+                        getDownloadURL(snapshot.ref).then(url => {
+                            imageUrl = url;
+                            resolve();
+                        }).catch(reject);
+                    }).catch(reject);
+                } else {
+                    resolve();
+                }
+            });
+        };
 
-      // Show the new post immediately below the progress container
-      const postContainer = document.createElement('div');
-      postContainer.className = 'post';
-      postContainer.innerHTML = `
-        <div class="post-header_and_post_content">
-            <div class="profile-box">
-              <div class="post-profile">
-                <img src="${profileImageUrl || 'default-profile.jpg'}" alt="Profile Image">
-              </div>
-            </div>
-            <div class="post-userName-andtime">
-              <h4>${userFirstName} ${userLastName}</h4>
-              <p class="span" id="post-time-${postId}">${formatRelativeTime(uploadTime)}</p>
-            </div>
-            <div class="post-menu">
-              <i class='bx bx-dots-vertical-rounded'></i>
-            </div>
-          </div>
-          <div class="post-text">
-              <p>${text}</p>
-            </div>
-            ${imageUrl ? `<div class="post-img"><img src="${imageUrl}" id="databaseImg"></div>` : ''}
-            <div class="post-activity-container">
-              <div class="post-activity-box ">
-                <div onclick="toggleLike('${postId}')" class="like-box " id="like-box-${postId}">
-                  <img id="likeGray-${postId}" src="like.png">
-                  <img id="likeBlue-${postId}" src="like-blue.png" style="display:none;">
-                  <h4 id="likeText-${postId}">Like</h4>
+        // Fetch profile image from Firebase Realtime Database
+        const fetchProfileImage = () => {
+            return new Promise((resolve, reject) => {
+                let UserCreds = JSON.parse(localStorage.getItem("user-creds"));
+                if (UserCreds && UserCreds.email) {
+                    const email = UserCreds.email;
+                    const formattedEmail = email.replace('.', ','); // Format email for database key
+                    const userProfileDetailsRef = dbRef(database, 'User_Profile_details/' + formattedEmail);
+
+                    get(userProfileDetailsRef).then(snapshot => {
+                        if (snapshot.exists()) {
+                            const data = snapshot.val();
+                            if (data.profileImageURL) {
+                                profileImageUrl = data.profileImageURL;
+                            }
+                            resolve();
+                        } else {
+                            console.log('No profile details found for this user.');
+                            resolve(); // Resolve even if no data found
+                        }
+                    }).catch(error => {
+                        console.error('Error fetching profile image:', error);
+                        reject(error);
+                    });
+                } else {
+                    console.error('No user credentials found in local storage.');
+                    resolve(); // Resolve even if no user credentials
+                }
+            });
+        };
+
+        // Save text and user details to Firebase Realtime Database
+        Promise.all([uploadImage(), fetchProfileImage()]).then(() => {
+            return set(dbRef(database, 'posts/' + postId), {
+                userId: userId,
+                firstName: userFirstName,
+                lastName: userLastName,
+                text: text,
+                timestamp: postId,
+                uploadTime: uploadTime,
+                imageUrl: imageUrl, // Save image URL if available
+                profileImageUrl: profileImageUrl // Save profile image URL
+            });
+        }).then(() => {
+            // Save post details under the user's email node
+            let UserCreds = JSON.parse(localStorage.getItem("user-creds"));
+            if (UserCreds && UserCreds.email) {
+                const email = UserCreds.email;
+                const formattedEmail = email.replace('.', ','); // Format email for database key
+                const userPostsRef = dbRef(database, 'User_Posts/' + formattedEmail + '/' + postId);
+                
+                return set(userPostsRef, {
+                    firstName: userFirstName,
+                    lastName: userLastName,
+                    text: text,
+                    timestamp: postId,
+                    uploadTime: uploadTime,
+                    imageUrl: imageUrl,
+                    profileImageUrl: profileImageUrl
+                });
+            } else {
+                return Promise.resolve(); // If no user credentials, resolve to avoid breaking the chain
+            }
+        }).then(() => {
+            const postSound = document.getElementById('postSound');
+            postSound.play();
+
+            const postContainer = document.createElement('div');
+            postContainer.className = 'post';
+            postContainer.innerHTML = `
+                <div class="post-header_and_post_content">
+                    <div class="profile-box">
+                        <div class="post-profile">
+                            <img src="${profileImageUrl || 'default-profile.jpg'}" alt="Profile Image">
+                        </div>
+                    </div>
+                    <div class="post-userName-andtime">
+                        <h4>${userFirstName} ${userLastName}</h4>
+                        <p class="span" id="post-time-${postId}">${formatRelativeTime(uploadTime)}</p>
+                    </div>
+                    <div class="post-menu">
+                        <i class='bx bx-dots-vertical-rounded'></i>
+                    </div>
                 </div>
-                <div class="like-box ">
-                  <img src="comment.png">
-                  <h4>Comment</h4>
+                <div class="post-text">
+                    <p>${text}</p>
                 </div>
-                <div class="like-box ">
-                  <img src="share.png">
-                  <h4>Share</h4>
-                </div>
-              </div>
-            </div>`;
+                ${imageUrl ? `<div class="post-img"><img src="${imageUrl}" id="databaseImg"></div>` : ''}
+                <div class="post-activity-container">
+                    <div class="post-activity-box ">
+                        <div onclick="toggleLike('${postId}')" class="like-box " id="like-box-${postId}">
+                            <img id="likeGray-${postId}" src="like.png">
+                            <img id="likeBlue-${postId}" src="like-blue.png" style="display:none;">
+                            <h4 id="likeText-${postId}">Like</h4>
+                        </div>
+                        <div class="like-box ">
+                            <img src="comment.png">
+                            <h4>Comment</h4>
+                        </div>
+                        <div class="like-box ">
+                            <img src="share.png">
+                            <h4>Share</h4>
+                        </div>
+                    </div>
+                </div>`;
 
-      // Insert the new post after the progress container
-      progressContainer.insertAdjacentElement('afterend', postContainer);
+            progressContainer.insertAdjacentElement('afterend', postContainer);
+            progressContainer.style.display = 'none';
 
-      // Hide the progress container after the post is created
-      progressContainer.style.display = 'none';
+            document.getElementById('textareaPlaceholder').value = '';
+            document.getElementById('fileInput').value = '';
+            document.getElementById('selectedImage').src = 'post.jpg'; // Reset image preview
+        }).catch(error => {
+            console.error("Error creating post: ", error);
+        });
 
-      // Clear the textarea and reset image preview
-      document.getElementById('textareaPlaceholder').value = '';
-      document.getElementById('fileInput').value = '';
-      document.getElementById('selectedImage').src = 'post.jpg'; // Reset image preview
-    }).catch(error => {
-      console.error("Error creating post: ", error);
-    });
-
-  } else {
-    alert("Please write something or select an image before posting.");
-  }
+    } else {
+        alert("Please write something or select an image before posting.");
+    }
 });
 
 
@@ -626,6 +653,7 @@ window.addEventListener('load', () => {
                   <h4>Share</h4>
                 </div>
               </div>
+              
             </div>`;
         
         postContainer.insertAdjacentElement('afterend', postElement);
