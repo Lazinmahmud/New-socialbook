@@ -104,7 +104,7 @@
       <img src="feedback.png ">
       <h4>Give feedback</h4>
     </div>
-    <div id="logout" class="menu-item ">
+    <div class="menu-item logout-btn">
       <img src="logout.png ">
       <h4>Log Out</h4>
     </div>
@@ -215,7 +215,7 @@
                
       </div>--->
       
-     <!--- <div class="post ">
+     <!----- <div class="post ">
       <div class="post-header_and_post_content">
               <div class="profile-box ">
                 <div class="post-profile">
@@ -224,7 +224,7 @@
               </div>
               <div class="post-userName-andtime">
                 <h4>${post.firstName} ${post.lastName} <span class="update-profile-text">Update his profile picture.</span></h4>
-                <p class="span" id="post-time-${postId}">${formatRelativeTime(post.uploadTime)}</p>
+                <p class="span" id="post-time-${postId}">${formatRelativeTime(post.uploadTime)} <span>•</span><span> <i class='bx bx-world'></i></span></p>
               </div>
               <div class="post-menu">
                 <i class='bx bx-dots-vertical-rounded'></i>
@@ -325,7 +325,30 @@
     </div>
   </div>
   
- 
+  <div class="menu-page-container">
+    <div class="menu-page">
+      <h4>Menu</h4>
+      <div class="menu-profile-cird">
+        <div class="menu-profile-circle">
+          <img class="profile-img">
+        </div>
+        <span class="menu-profile-name">
+          <h4 style="font-size: 14px;" class="greet"></h4>
+        </span>
+      </div>
+      <button type="button" class="lg-btn-menu">Log out</button>
+    </div>
+    
+    <div class="logout-popup-opachity">
+      <div class="lg-popup">
+        <p>Log out of your account?</p>
+        <div class="lg-two-btn-box">
+        <button type="button" class="calcleBtn">CANCEL</button>
+        <button type="button" class="lg logout-btn">Log out</button>
+      </div>
+      </div>
+    </div>
+  </div>
  
  
  
@@ -405,7 +428,6 @@
   
   
   
-  
 
     <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -452,7 +474,7 @@
             const popupOpachityElement = document.querySelector('.popup-opachity');
             if (popupOpachityElement) {
                 popupOpachityElement.style.display = 'none';
-                document.querySelector('.mobail-nav').style.display = 'block'
+                document.querySelector('.mobail-nav').style.zIndex = '1'
             }
         }, 10);
 
@@ -580,7 +602,7 @@
                     </div>
                     <div class="post-userName-andtime">
                         <h4>${userFirstName} ${userLastName}</h4>
-                        <p class="span" id="post-time-${postId}">${formatRelativeTime(uploadTime)}</p>
+                        <p class="span" id="post-time-${postId}">${formatRelativeTime(uploadTime)} <span>•</span><span> <i class='bx bx-world'></i></span></p>
                     </div>
                     <div class="post-menu">
                         <i class='bx bx-dots-vertical-rounded'></i>
@@ -701,7 +723,7 @@ window.addEventListener('load', () => {
               </div>
               <div class="post-userName-andtime">
                 <h4>${post.firstName} ${post.lastName}</h4>
-                <p class="span" id="post-time-${postId}">${formatRelativeTime(post.uploadTime)}</p>
+                <p class="span" id="post-time-${postId}">${formatRelativeTime(post.uploadTime)} <span>•</span><span> <i class='bx bx-world'></i></span></p>
               </div>
               <div class="post-menu">
                 <i class='bx bx-dots-vertical-rounded'></i>
@@ -761,7 +783,7 @@ window.addEventListener('load', () => {
               </div>
               <div class="post-userName-andtime">
                 <h4>${post.firstName} ${post.lastName}</h4>
-                <p class="span" id="post-time-${postId}">${formatRelativeTime(post.uploadTime)}</p>
+                <p class="span" id="post-time-${postId}">${formatRelativeTime(post.uploadTime)} <span>•</span><span> <i class='bx bx-world'></i></span></p>
               </div>
               <div class="post-menu">
                 <i class='bx bx-dots-vertical-rounded'></i>
@@ -905,13 +927,12 @@ window.addEventListener('load', loadProfileAndCoverImages);
   
   
   <script>
-    
     let UserCreds = JSON.parse(localStorage.getItem("user-creds"));
     let UserInfo = JSON.parse(localStorage.getItem("user-info"));
 
     let MsgHead = document.getElementById('accountEmail');
     let GreetHeads = document.querySelectorAll('.greet'); // Select all elements with class 'greet'
-    let LogOutBtn = document.getElementById('logout');
+    let LogOutBtns = document.querySelectorAll('.logout-btn');
     let PostTextarea = document.getElementById('postTextarea');
     let textareaPlaceholder = document.getElementById('textareaPlaceholder');
     let nameInput = document.getElementById('editName');
@@ -938,8 +959,12 @@ window.addEventListener('load', loadProfileAndCoverImages);
     }
 
     window.addEventListener('load', CheckCred);
-    LogOutBtn.addEventListener('click', logOut);
-  </script>
+
+    // Add event listener to all logout buttons
+    LogOutBtns.forEach(btn => {
+        btn.addEventListener('click', logOut);
+    });
+</script>
   <script src="script.js"></script>
 </body>
 </html>
