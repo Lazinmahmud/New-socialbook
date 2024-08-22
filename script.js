@@ -276,6 +276,7 @@ profileNavM.addEventListener('click', function(){
   document.querySelector('.profile-page-container').style.display = 'block'
   document.querySelector('.main-container').style.display = 'none'
   document.querySelector('.mobail-nav').style.marginTop = '-3rem'
+  document.querySelector('.menu-page-container').style.display = 'none'
 });
 
 // Home Navigation Click
@@ -292,6 +293,7 @@ homNavM.addEventListener('click', function(){
   document.querySelector('.profile-page-container').style.display = 'none'
   document.querySelector('.main-container').style.display = 'flex'
   document.querySelector('.mobail-nav').style.marginTop = '0'
+  document.querySelector('.menu-page-container').style.display = 'none'
 });
 
 // Notifications Navigation Click
@@ -308,6 +310,7 @@ notiNavM.addEventListener('click', function(){
   document.querySelector('.profile-page-container').style.display = 'none'
   document.querySelector('.main-container').style.display = 'flex'
   document.querySelector('.mobail-nav').style.marginTop = '-3rem'
+  document.querySelector('.menu-page-container').style.display = 'none'
 });
 
 // Menu Navigation Click
@@ -320,9 +323,57 @@ menuNavM.addEventListener('click', function(){
   notiGrayM.style.display = 'block';
   notiBlueM.style.display = 'none';
   navMenuImg.style.border = '2px solid var(--main-color)';
+  document.querySelector('.menu-page-container').style.display = 'block'
+  document.querySelector('.main-container').style.display = 'none'
   
   document.querySelector('.mobail-nav').style.marginTop = '-3rem'
   
   document.querySelector('.profile-page-container').style.display = 'none'
-  document.querySelector('.main-container').style.display = 'flex'
+});
+
+
+
+
+//lg popup open 
+
+let lgBtnMenu = document.querySelector('.lg-btn-menu');
+
+lgBtnMenu.addEventListener('click', function(){
+  lgPopupOpachity.style.display = 'flex'
+});
+
+
+
+// logout popup close 
+
+let calcleBtn = document.querySelector('.calcleBtn');
+let lgPopupOpachity = document.querySelector('.logout-popup-opachity');
+
+
+calcleBtn.addEventListener('click', function(){
+  
+  setTimeout(function() {
+    lgPopupOpachity.style.display = 'none'
+  }, 100);
+});
+
+
+
+
+// img long click download option disable 
+document.querySelectorAll('img').forEach((img) => {
+  img.addEventListener('contextmenu', (event) => {
+    event.preventDefault(); // This prevents the right-click context menu from appearing
+  });
+  
+  img.addEventListener('mousedown', (event) => {
+    if (event.button === 2) { // Right-click button
+      event.preventDefault(); // Prevent default action for right-click
+    }
+  });
+  
+  img.addEventListener('click', () => {
+    // Put your click event logic here
+    console.log('Image clicked!');
+  });
 });
