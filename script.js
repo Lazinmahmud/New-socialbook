@@ -151,12 +151,15 @@ const coverImgInp = document.getElementById('coverImgInp');
 document.getElementById("postTextarea").addEventListener('click', function(){
   
   document.querySelector('.popup-opachity').style.display = 'flex'
+  document.querySelector('.mobail-nav').style.zIndex = '0'
 });
 
 
 // post create popup  close
 document.querySelector('.post-create-header i ').addEventListener('click', function(){
   document.querySelector('.popup-opachity').style.display = 'none'
+  document.querySelector('.mobail-nav').style.zIndex = '1'
+  
   selectedImage.src = '';
   selectedImage.style.display = 'none';
   imgSelectIcon.style.display = 'block'
@@ -268,7 +271,7 @@ profileNavM.addEventListener('click', function(){
   homeGrayM.style.display = 'block';
   notiGrayM.style.display = 'block';
   notiBlueM.style.display = 'none';
-  navMenuImg.style.border = '0px solid var(--main-color)';
+  navMenuImg.style.border = '2px solid #808080';
   
   document.querySelector('.profile-page-container').style.display = 'block'
   document.querySelector('.main-container').style.display = 'none'
@@ -284,7 +287,7 @@ homNavM.addEventListener('click', function(){
   profileGrayM.style.display = 'block';
   notiGrayM.style.display = 'block';
   notiBlueM.style.display = 'none';
-  navMenuImg.style.border = '0px solid var(--main-color)';
+  navMenuImg.style.border = '2px solid #808080';
   
   document.querySelector('.profile-page-container').style.display = 'none'
   document.querySelector('.main-container').style.display = 'flex'
@@ -300,7 +303,7 @@ notiNavM.addEventListener('click', function(){
   profileGrayM.style.display = 'block';
   notiGrayM.style.display = 'none';
   notiBlueM.style.display = 'block';
-  navMenuImg.style.border = '0px solid var(--main-color)';
+  navMenuImg.style.border = '2px solid #808080';
   
   document.querySelector('.profile-page-container').style.display = 'none'
   document.querySelector('.main-container').style.display = 'flex'
