@@ -27,6 +27,12 @@
 }
 body{
   background: var(--body-color);
+  -webkit-user-drag: none;
+  user-drag: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .mobail-nav{
   width: 100%;
@@ -287,7 +293,7 @@ nav {
 #greet{
   font-size: 18px;
 }
-#logout{
+.logout{
   width: 100%;
   padding: 8px;
   
@@ -359,10 +365,6 @@ nav {
   background: var(--off-white-color);
   color: #808080;
   border-radius: 2rem;
-  -webkit-user-select: none; 
-  -moz-user-select: none;
-  -ms-user-select: none; 
-  user-select: none;
 }
 .textarea p:active{
   opacity: 0.60;
@@ -510,10 +512,6 @@ nav {
 .like-box h4{
   color: var(--gray-text-color);
   font-size: 15px;
-  -webkit-user-select: none; 
-  -moz-user-select: none;
-  -ms-user-select: none; 
-  user-select: none;
   font-weight: 410;
 }
 #databaseImg{
@@ -633,10 +631,6 @@ nav {
 }
 .img-select-icon h4{
   margin-top: 8px;
-  -webkit-user-select: none; 
-  -moz-user-select: none;
-  -ms-user-select: none; 
-  user-select: none;
 }
 .postBtn{
   width: 100%;
@@ -662,11 +656,6 @@ nav {
 }
 .menu-item h4{
   margin-left: 10px;
-  -webkit-user-select: none; 
-  -moz-user-select: none;
-  -ms-user-select: none; 
-  user-select: none;
-  color: var(--text-color);
 }
 .menu-item:active{
   background: var(--off-white-color);
@@ -1055,6 +1044,107 @@ nav {
 .post-upload-pogress-container p{
   font-size: 14px;
 }
+.menu-page-container{
+  width: 100%;
+  height: 100vh;
+  background: var(--body-color);
+  position: fixed;
+  top: 2.9rem;
+  overflow-y: scroll;
+  display: none;
+}
+.menu-page{
+  width: 100%;
+  height: 100%;
+  background: var(--body-color);
+  padding: 1rem;
+}
+.menu-page h4{
+  font-size: 25px;
+}
+.menu-profile-cird{
+  margin-top: 1rem;
+  width: 100%;
+  background: var(--post-bg-color);
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  box-shadow: 0 0 3px rgba(0,0,0,0.2);
+  border-radius: 10px;
+}
+.menu-profile-circle{
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: var(--off-white-color);
+}
+.menu-profile-circle img{
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #ccc;
+}
+.menu-profile-name{
+  margin-left: 0.8rem;
+}
+.lg-btn-menu{
+  width: 100%;
+  height: 2.5rem;
+  border: 0;
+  background: var(--main-color);
+  border-radius: 5px;
+  margin-top: 480px;
+  font-weight: 420;
+  color: #fff;
+}
+.lg-btn-menu:active{
+  opacity: 0.50;
+}
+.logout-popup-opachity{
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  background: rgba(0,0,0,0.2);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.lg-popup{
+  width: 80%;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 8px;
+}
+.lg-two-btn-box{
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-top: 2rem;
+  gap: 5px;
+}
+.lg-two-btn-box button{
+  padding: 12px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+}
+.lg-two-btn-box button:active{
+  background: var(--off-white-color);
+}
+.calcleBtn{
+  margin-left: auto;
+}
+.lg{
+  color: red;
+}
+
+
+
+
+
+
 
 
 
@@ -1129,11 +1219,20 @@ nav{
   padding: 5px;
 }
 .post-activity-container{
-  padding-left: 8px;
-  padding-right: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 .post-activity-box{
+  gap: 12px;
   border: 0;
+  padding: 8px;
+  
+}
+.like-box{
+  padding: 2rem;
+  background: var(--off-white-color);
+  border-radius: 2rem;
+  height: 2.5rem;
 }
 .like-box img{
   width: 23px;
