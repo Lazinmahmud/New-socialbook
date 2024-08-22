@@ -37,6 +37,9 @@
     </div>
     
     <div class="nav-right">
+      <div class="search-icon-box">
+        <i class='bx bx-search'></i>
+      </div>
       <div class="profile-circle " onclick="toggleDropdown()">
       <img class="profile-img">
     </div>
@@ -107,6 +110,22 @@
     </div>
   </div>
   
+     <div class="dropdown-search-box">
+      <div class="search-inp">
+        <input type="search" placeholder="Search Socialbook">
+      </div>
+      <div class="search-content-box">
+        <div class="search-user-box">
+          <div class="search-user-profile"></div>
+          <div class="search-user-name">
+            <h4>User Name</h4>
+            <p>user</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
 
 
   <div class="main-container">
@@ -130,7 +149,7 @@
     
     <audio id="postSound" src="post-sound.mp3" preload="auto"></audio>
     
- <!----<div class="post ">
+ <!---<div class="post ">
       <div class="post-header_and_post_content">
         <div class="profile-box ">
           <div class="post-profile">
@@ -194,7 +213,47 @@
            <button class="comment-send-button" type="button"><i class='bx bxs-send' ></i></button>
          </div>
                
-      </div>   ---->
+      </div>--->
+      
+     <!--- <div class="post ">
+      <div class="post-header_and_post_content">
+              <div class="profile-box ">
+                <div class="post-profile">
+                   ${profileImageHTML}
+                </div>
+              </div>
+              <div class="post-userName-andtime">
+                <h4>${post.firstName} ${post.lastName} <span class="update-profile-text">Update his profile picture.</span></h4>
+                <p class="span" id="post-time-${postId}">${formatRelativeTime(post.uploadTime)}</p>
+              </div>
+              <div class="post-menu">
+                <i class='bx bx-dots-vertical-rounded'></i>
+              </div>
+            </div>
+       <div class="profile-post-img ">
+          <div class="profileImgCircle">
+           <img src="post.jpg" id="databaseImg">
+        </div>
+      </div>
+      <div class="post-activity-container">
+       <div class="post-activity-box ">
+         <div onclick="toggleLike()" class="like-box ">
+            <img id="likeGray" src="like.png">
+              <img id="likeBlue" src="like-blue.png">
+             <h4 id="likeText">Like</h4>
+           </div>
+         <div class="like-box ">
+       <img src="comment.png">
+     <h4>Comment</h4>
+   </div>
+     <div class="like-box ">
+      <img src="share.png">
+        <h4>Share</h4>
+          </div>
+             </div>
+               </div>
+               
+      </div>------>
       
               
         
@@ -393,6 +452,7 @@
             const popupOpachityElement = document.querySelector('.popup-opachity');
             if (popupOpachityElement) {
                 popupOpachityElement.style.display = 'none';
+                document.querySelector('.mobail-nav').style.display = 'block'
             }
         }, 10);
 
