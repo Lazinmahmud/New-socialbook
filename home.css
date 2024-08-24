@@ -803,6 +803,17 @@ nav {
   width: 100%;
   height: 280px;
   background: #D0D9DE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.edit-profile-cover-box i{
+  font-size: 30px;
+  position: absolute;
+  background: #ccc;
+  padding: 8px;
+  border-radius: 50%;
 }
 .edit-profile-cover-box img {
   width: 100%;
@@ -822,6 +833,16 @@ nav {
   position: absolute;
   background:#D0D9DE;
   border: 5px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.edit-profile-box i{
+  font-size: 30px;
+  position: absolute;
+  background: #ccc;
+  padding: 8px;
+  border-radius: 50%;
 }
 .edit-profile-box:active{
   background: #ccc;
@@ -1309,7 +1330,11 @@ nav{
   padding-left: 1.4rem;
 }
 .Edit-profile-btn{
-  display: none;
+  top: 230px;
+  border: 1px solid #D0D9DE;
+  font-weight: 420;
+  padding: 7px;
+  width: 110px;
 }
 #accountEmail{
   font-size: 13px;
@@ -1397,5 +1422,42 @@ nav{
 }
 .icon-box i{
   font-size: 25px;
+}
+.edit-profile-popup{
+  width: 100%;
+  height: 100%;
+  background: var(--post-bg-color);
+  border-radius: 0px;
+}
+.edit-profile-cover-box{
+  height: 200px;
+  border-radius: 5px;
+}
+.edit-profile-box{
+  width: 150px;
+  height: 150px;
+  margin-left: 1rem;
+  border: 4px solid #fff;
+}
+.edit-input-box{
+  border: 1px solid #ccc;
+  
+}
+.edit-input-box input {
+  border-radius: 5px;
+  padding: 0.8rem;
+  font-size: 15px;
+}
+.edit-save-btn {
+  width: 40%;
+  padding: 10px;
+  margin-top: 2rem;
+  font-size: 15px;
+}
+.edit-profile-popup-header h4{
+  font-size: 17px;
+}
+.edit-profile-popup-header i{
+  font-size: 32px;
 }
 }
