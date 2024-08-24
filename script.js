@@ -170,12 +170,14 @@ document.querySelector('.post-create-header i ').addEventListener('click', funct
 
 document.querySelector('.edit-profile-popup-header i ').addEventListener('click', function(){
   document.querySelector('.edit-profile-popup-opachity').style.display = 'none'
+  document.querySelector('.mobail-nav').style.zIndex = '1'
 });
 
 
 // edit profile pop up open  
  document.querySelector('.Edit-profile-btn ').addEventListener('click', function(){
   document.querySelector('.edit-profile-popup-opachity').style.display = 'flex'
+  document.querySelector('.mobail-nav').style.zIndex = '0'
 });
 
 
