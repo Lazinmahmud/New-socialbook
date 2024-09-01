@@ -54,23 +54,32 @@
     </div>
     <div class="nav-bottom">
       
+      <a href="#" >
       <div id="homNavM" class="nav-mobail">
         <img id="homeBlueM" src="home-blue.png">
         <img id="homeGrayM" src="home.png">
+        <div class="newFeedNotification"></div>
       </div>
+      </a>
+      <a href="#">
       <div id="profileNavM" class="nav-mobail">
         <img id="profileGrayM" src="profile.png">
         <img id="profileBlueM" src="profile-blue.png">
       </div>
+      </a>
+      <a href="#">
       <div id="notiNavM" class="nav-mobail">
         <img id="notiGrayM" src="notification.png">
         <img id="notiBlueM" src="notafication-blue.png">
       </div>
+      </a>
+      <a href="#">
       <div id="menuNavM" class="nav-mobail">
         <div class="nav-menu">
           <img class="profile-img">
         </div>
       </div>
+      </a>
       
       
     </div>
@@ -466,17 +475,17 @@
   }
 });
   
-  document.getElementById('uploadBtn').addEventListener('click', function() {
+  document.getElementById('uploadBtn').addEventListener('click', function () {
     const text = document.getElementById('textareaPlaceholder').value;
     const fileInput = document.getElementById('fileInput');
     const file = fileInput.files[0];
 
     if (text || file) {
-        setTimeout(function() {
+        setTimeout(function () {
             const popupOpachityElement = document.querySelector('.popup-opachity');
             if (popupOpachityElement) {
                 popupOpachityElement.style.display = 'none';
-                document.querySelector('.mobail-nav').style.zIndex = '1'
+                document.querySelector('.mobail-nav').style.zIndex = '1';
             }
         }, 10);
 
@@ -498,7 +507,7 @@
 
         if (file) {
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 progressImage.src = e.target.result;
             };
             reader.readAsDataURL(file);
@@ -578,7 +587,7 @@
                 const email = UserCreds.email;
                 const formattedEmail = email.replace('.', ','); // Format email for database key
                 const userPostsRef = dbRef(database, 'User_Posts/' + formattedEmail + '/' + postId);
-                
+
                 return set(userPostsRef, {
                     firstName: userFirstName,
                     lastName: userLastName,
@@ -595,11 +604,14 @@
             const postSound = document.getElementById('postSound');
             postSound.play();
 
+            // Convert newlines to <br> tags
+            const formattedText = text.replace(/\n/g, '<br>');
+
             const postContainerHTML = `
                 <div class="post-header_and_post_content">
                     <div class="profile-box">
                         <div class="post-profile">
-                            <img src="${profileImageUrl || 'default-profile.jpg'}" alt="Profile Image">
+                            <img src="${profileImageUrl || 'no-profile.png'}">
                         </div>
                     </div>
                     <div class="post-userName-andtime">
@@ -611,7 +623,7 @@
                     </div>
                 </div>
                 <div class="post-text">
-                    <p>${text}</p>
+                    <p>${formattedText}</p>
                 </div>
                 ${imageUrl ? `<div class="post-img"><img src="${imageUrl}" id="databaseImg"></div>` : ''}
                 <div class="post-activity-container">
@@ -622,7 +634,7 @@
                             <h4 id="likeText-${postId}">Like</h4>
                         </div>
                         <div class="like-box ">
-                            <img src="comment.png">
+                            <img  src="comment.png">
                             <h4>Comment</h4>
                         </div>
                         <div class="like-box ">
@@ -650,7 +662,11 @@
 
             document.getElementById('textareaPlaceholder').value = '';
             document.getElementById('fileInput').value = '';
-            document.getElementById('selectedImage').src = 'post.jpg'; // Reset image preview
+            document.getElementById('selectedImage').src = '';
+
+            // ** New code to save notification in a bucket **
+            saveNotificationBucket(userId, postId, uploadTime, userFirstName, userLastName);
+
         }).catch(error => {
             console.error("Error creating post: ", error);
         });
@@ -659,6 +675,59 @@
         alert("Please write something or select an image before posting.");
     }
 });
+
+
+
+
+// Function to save notification in a bucket
+function saveNotificationBucket(userId, postId, uploadTime, userFirstName, userLastName) {
+    const notificationId = new Date().getTime(); // Unique notification ID
+    const userBucketRef = dbRef(database, `New_Notifi/${userId}`); // Create bucket for user notifications
+
+    // Create a new notification object
+    const newNotificationRef = dbRef(database, `New_Notifi/${userId}/${notificationId}`);
+    
+    set(newNotificationRef, {
+        userId: userId,
+        postId: postId,
+        timestamp: notificationId,
+        uploadTime: uploadTime,
+        message: `${userFirstName} ${userLastName} has posted a new update.`,
+        read: false // To track if the notification has been read
+    }).then(() => {
+        console.log("Notification saved successfully in user's notification bucket.");
+        updateNotificationCount(userId); // Update notification count after saving
+    }).catch(error => {
+        console.error("Error saving notification: ", error);
+    });
+}
+
+// Function to update the notification count in the UI
+function updateNotificationCount(userId) {
+    const userBucketRef = dbRef(database, `New_Notifi/${userId}`);
+
+    // Get all notifications for the user
+    get(userBucketRef).then(snapshot => {
+        if (snapshot.exists()) {
+            const notifications = snapshot.val();
+            const unreadCount = Object.values(notifications).filter(notification => !notification.read).length;
+
+            // Update the count in the UI
+            document.querySelector('.newFeedNotification').innerText = unreadCount;
+        } else {
+            // If no notifications, set count to 0
+            document.querySelector('.newFeedNotification').innerText = 0;
+        }
+    }).catch(error => {
+        console.error("Error fetching notifications: ", error);
+    });
+}
+
+// Call updateNotificationCount when the page loads to set the initial notification count
+window.onload = function() {
+    const userId = "USER_ID_HERE"; // Replace with actual user ID
+    updateNotificationCount(userId);
+};
 
 
 function formatRelativeTime(isoDate) {
@@ -675,20 +744,27 @@ function formatRelativeTime(isoDate) {
     hour12: true      // PM, AM
   };
 
-  if (diffInSeconds < 60) return `${diffInSeconds} seconds ago`;
-  const diffInMinutes = Math.floor(diffInSeconds / 60);
-  if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
-  const diffInHours = Math.floor(diffInMinutes / 60);
-  if (diffInHours < 24) return `${diffInHours}h ago`;
-  const diffInDays = Math.floor(diffInHours / 24);
-  if (diffInDays <= 5) return `${diffInDays}d ago`;
+  if (diffInSeconds < 60) return `Just now`;  // পরিবর্তিত অংশ
+const diffInMinutes = Math.floor(diffInSeconds / 60);
+if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+const diffInHours = Math.floor(diffInMinutes / 60);
+if (diffInHours < 24) return `${diffInHours}h ago`;
+const diffInDays = Math.floor(diffInHours / 24);
+if (diffInDays <= 5) return `${diffInDays}d ago`;
 
-  // ৫ দিনের বেশি হলে নির্দিষ্ট ফরম্যাটে তারিখ দেখাবে
+  // If more than 5 days, show formatted date
   return postTime.toLocaleDateString('en-US', options);
 }
 
-
-
+// Function to update post times in real-time
+function updatePostTimes() {
+  const allPostTimes = document.querySelectorAll('[id^="post-time-"]');
+  allPostTimes.forEach(postTimeElement => {
+    const postId = postTimeElement.id.split('-')[2]; // Extract postId from element id
+    const postTime = postTimeElement.getAttribute('data-upload-time');
+    postTimeElement.innerHTML = `${formatRelativeTime(postTime)} <span>•</span><span> <i class='bx bx-world'></i></span>`;
+  });
+}
 
 // Fetch and display posts when the page loads
 window.addEventListener('load', () => {
@@ -714,47 +790,50 @@ window.addEventListener('load', () => {
           const imageHTML = post.imageUrl ? `<div class="post-img"><img src="${post.imageUrl}" id="databaseImg"></div>` : '';
           const profileImageHTML = post.profileImageUrl 
               ? `<img src="${post.profileImageUrl}" alt="Profile Image">` 
-              : `<img src="default-profile.jpg" alt="Default Profile Image">`;
+              : `<img src="no-profile.png" >`;
 
           postElement.innerHTML = `
-            <div class="post-header_and_post_content">
-              <div class="profile-box ">
-                <div class="post-profile">
-                  ${profileImageHTML}
-                </div>
-              </div>
-              <div class="post-userName-andtime">
-                <h4>${post.firstName} ${post.lastName}</h4>
-                <p class="span" id="post-time-${postId}">${formatRelativeTime(post.uploadTime)} <span>•</span><span> <i class='bx bx-world'></i></span></p>
-              </div>
-              <div class="post-menu">
-                <i class='bx bx-dots-vertical-rounded'></i>
-              </div>
-            </div>
-            <div class="post-text">
-                <p>${post.text}</p>
-              </div>
-              ${imageHTML}
-              <div class="post-activity-container">
-                <div class="post-activity-box ">
-                  <div onclick="toggleLike('${postId}')" class="like-box " id="like-box-${postId}">
-                    <img id="likeGray-${postId}" src="like.png">
-                    <img id="likeBlue-${postId}" src="like-blue.png" style="display:none;">
-                    <h4 id="likeText-${postId}">Like</h4>
-                  </div>
-                  <div class="like-box ">
-                    <img src="comment.png">
-                    <h4>Comment</h4>
-                  </div>
-                  <div class="like-box ">
-                    <img src="share.png">
-                    <h4>Share</h4>
-                  </div>
-                </div>
-              </div>`;
+  <div class="post-header_and_post_content">
+    <div class="profile-box">
+      <div class="post-profile">
+        ${profileImageHTML}
+      </div>
+    </div>
+    <div class="post-userName-andtime">
+      <h4>${post.firstName} ${post.lastName}</h4>
+      <p class="span" id="post-time-${postId}" data-upload-time="${post.uploadTime}">${formatRelativeTime(post.uploadTime)} <span>•</span><span> <i class='bx bx-world'></i></span></p>
+    </div>
+    <div class="post-menu">
+      <i class='bx bx-dots-vertical-rounded'></i>
+    </div>
+  </div>
+  <div class="post-text">
+    <p>${post.text.replace(/\n/g, '<br>')}</p>
+  </div>
+  ${imageHTML}
+  <div class="post-activity-container">
+    <div class="post-activity-box">
+      <div onclick="toggleLike('${postId}')" class="like-box" id="like-box-${postId}">
+        <img id="likeGray-${postId}" src="like.png">
+        <img id="likeBlue-${postId}" src="like-blue.png" style="display:none;">
+        <h4 id="likeText-${postId}">Like</h4>
+      </div>
+      <div class="like-box">
+        <img src="comment.png">
+        <h4>Comment</h4>
+      </div>
+      <div class="like-box">
+        <img src="share.png">
+        <h4>Share</h4>
+      </div>
+    </div>
+  </div>`;
           
           postContainer.insertAdjacentElement('afterend', postElement);
         }
+
+        // Start interval to update post times every minute
+        setInterval(updatePostTimes, 60000); // Update every 60 seconds
       }
     }).catch(error => {
       console.error("Error fetching all posts: ", error);
@@ -774,47 +853,50 @@ window.addEventListener('load', () => {
           const imageHTML = post.imageUrl ? `<div class="post-img"><img src="${post.imageUrl}" id="databaseImg"></div>` : '';
           const profileImageHTML = post.profileImageUrl 
               ? `<img src="${post.profileImageUrl}" alt="Profile Image">` 
-              : `<img src="default-profile.jpg" alt="Default Profile Image">`;
+              : `<img src="no-profile.png">`;
 
           postElement.innerHTML = `
-            <div class="post-header_and_post_content">
-              <div class="profile-box ">
-                <div class="post-profile">
-                  ${profileImageHTML}
-                </div>
-              </div>
-              <div class="post-userName-andtime">
-                <h4>${post.firstName} ${post.lastName}</h4>
-                <p class="span" id="post-time-${postId}">${formatRelativeTime(post.uploadTime)} <span>•</span><span> <i class='bx bx-world'></i></span></p>
-              </div>
-              <div class="post-menu">
-                <i class='bx bx-dots-vertical-rounded'></i>
-              </div>
-            </div>
-            <div class="post-text">
-                <p>${post.text}</p>
-              </div>
-              ${imageHTML}
-              <div class="post-activity-container">
-                <div class="post-activity-box ">
-                  <div onclick="toggleLike('${postId}')" class="like-box " id="like-box-${postId}">
-                    <img id="likeGray-${postId}" src="like.png">
-                    <img id="likeBlue-${postId}" src="like-blue.png" style="display:none;">
-                    <h4 id="likeText-${postId}">Like</h4>
-                  </div>
-                  <div class="like-box ">
-                    <img src="comment.png">
-                    <h4>Comment</h4>
-                  </div>
-                  <div class="like-box ">
-                    <img src="share.png">
-                    <h4>Share</h4>
-                  </div>
-                </div>
-              </div>`;
+  <div class="post-header_and_post_content">
+    <div class="profile-box">
+      <div class="post-profile">
+        ${profileImageHTML}
+      </div>
+    </div>
+    <div class="post-userName-andtime">
+      <h4>${post.firstName} ${post.lastName}</h4>
+      <p class="span" id="post-time-${postId}" data-upload-time="${post.uploadTime}">${formatRelativeTime(post.uploadTime)} <span>•</span><span> <i class='bx bx-world'></i></span></p>
+    </div>
+    <div class="post-menu">
+      <i class='bx bx-dots-vertical-rounded'></i>
+    </div>
+  </div>
+  <div class="post-text">
+    <p>${post.text.replace(/\n/g, '<br>')}</p>
+  </div>
+  ${imageHTML}
+  <div class="post-activity-container">
+    <div class="post-activity-box">
+      <div onclick="toggleLike('${postId}')" class="like-box" id="like-box-${postId}">
+        <img id="likeGray-${postId}" src="like.png">
+        <img id="likeBlue-${postId}" src="like-blue.png" style="display:none;">
+        <h4 id="likeText-${postId}">Like</h4>
+      </div>
+      <div class="like-box">
+        <img src="comment.png">
+        <h4>Comment</h4>
+      </div>
+      <div class="like-box">
+        <img src="share.png">
+        <h4>Share</h4>
+      </div>
+    </div>
+  </div>`;
           
           profilePostContainer.insertAdjacentElement('afterbegin', postElement);
         }
+
+        // Start interval to update post times every minute
+        setInterval(updatePostTimes, 60000); // Update every 60 seconds
       }
     }).catch(error => {
       console.error("Error fetching user posts: ", error);
