@@ -21,16 +21,16 @@
     <div class="nav-middle ">
       <div class="nav-icon-box">
         <div id="homeNav" class="nav-icon ">
-        <img id="homeGray" src="home.png">
+        <img  id="homeGray" src="home.png">
         <img id="homeBlue" src="home-blue.png">
       </div>
       <div id="profileNav" class="nav-icon ">
-        <img id="profileGray" src="profile.png">
-        <img id="profileBlue" src="profile-blue.png">
+        <img  id="profileGray" src="profile.png">
+        <img  id="profileBlue" src="profile-blue.png">
       </div>
       <div id="notificationNav" class="nav-icon ">
-        <img id="notiGray" src="notification.png">
-        <img id="notiBlue" src="notafication-blue.png">
+        <img  id="notiGray" src="notification.png">
+        <img  id="notiBlue" src="notafication-blue.png">
       </div>
       </div>
       <div class="underline"></div>
@@ -64,14 +64,14 @@
       </a>
       <a href="#">
       <div id="profileNavM" class="nav-mobail">
-        <img id="profileGrayM" src="profile.png">
+        <img  id="profileGrayM" src="profile.png">
         <img id="profileBlueM" src="profile-blue.png">
       </div>
       </a>
       <a href="#">
       <div id="notiNavM" class="nav-mobail">
-        <img id="notiGrayM" src="notification.png">
-        <img id="notiBlueM" src="notafication-blue.png">
+        <img  id="notiGrayM" src="notification.png">
+        <img  id="notiBlueM" src="notafication-blue.png">
       </div>
       </a>
       <a href="#">
@@ -92,7 +92,7 @@
     
     <div class="user-profile-and-name ">
       <div class="menu-profile ">
-        <img class="profile-img">
+        <img class="profile-img lazyload">
       </div>
       <h4 class="greet"></h4>
     </div>
@@ -145,7 +145,7 @@
      <div class="post-create-container ">
        <div class="post-create-profile-box">
          <div class="post-create-profile">
-           <img class="profile-img">
+           <img class="profile-img lazyload">
          </div>
        </div>
      <div class="textarea ">
@@ -638,7 +638,7 @@
                 <div class="post-text">
                     <p>${formattedText}</p>
                 </div>
-                ${imageUrl ? `<div class="post-img"><img src="${imageUrl}" id="databaseImg"></div>` : ''}
+                ${imageUrl ? `<div class="post-img"><img src="${imageUrl}" class="lazyload" id="databaseImg"></div>` : ''}
                 <div class="post-activity-container">
                     <div class="post-activity-box ">
                         <div onclick="toggleLike('${postId}')" class="like-box " id="like-box-${postId}">
@@ -698,7 +698,33 @@
     }
 });
 
+// Lazy loading with IntersectionObserver
+document.addEventListener("DOMContentLoaded", function() {
+  const lazyImages = [].slice.call(document.querySelectorAll("img.lazyload"));
 
+  if ("IntersectionObserver" in window) {
+    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          let lazyImage = entry.target;
+          lazyImage.src = lazyImage.dataset.src;
+          lazyImage.classList.remove("lazyload");
+          lazyImageObserver.unobserve(lazyImage);
+        }
+      });
+    });
+
+    lazyImages.forEach(function(lazyImage) {
+      lazyImageObserver.observe(lazyImage);
+    });
+  } else {
+    // Fallback for older browsers
+    lazyImages.forEach(function(lazyImage) {
+      lazyImage.src = lazyImage.dataset.src;
+      lazyImage.classList.remove("lazyload");
+    });
+  }
+});
 
 
 // Function to save notification in a bucket
@@ -809,7 +835,7 @@ window.addEventListener('load', () => {
           const postElement = document.createElement('div');
           postElement.className = 'post';
           
-          const imageHTML = post.imageUrl ? `<div class="post-img"><img src="${post.imageUrl}" id="databaseImg"></div>` : '';
+          const imageHTML = post.imageUrl ? `<div class="post-img"><img src="${post.imageUrl}" class="lazyload" id="databaseImg"></div>` : '';
           const profileImageHTML = post.profileImageUrl 
               ? `<img src="${post.profileImageUrl}">` 
               : `<img src="no-profile.png" >`;
@@ -881,7 +907,7 @@ window.addEventListener('load', () => {
           const postElement = document.createElement('div');
           postElement.className = 'post';
 
-          const imageHTML = post.imageUrl ? `<div class="post-img"><img src="${post.imageUrl}" id="databaseImg"></div>` : '';
+          const imageHTML = post.imageUrl ? `<div class="post-img"><img src="${post.imageUrl}" class="lazyload" id="databaseImg"></div>` : '';
           const profileImageHTML = post.profileImageUrl 
               ? `<img src="${post.profileImageUrl}">` 
               : `<img src="no-profile.png">`;
