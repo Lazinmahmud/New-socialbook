@@ -498,6 +498,7 @@ nav {
   max-height: 600px;
   object-fit: cover;
   width: 100%;
+  background: var(--off-white-color);
 }
 .post-activity-container{
   width: 100%;
@@ -1189,10 +1190,7 @@ nav {
   position: relative;
 }
 .newFeedNotification{
-  padding-left: 4px;
-  padding-right: 4px;
-  padding-top: 2px;
-  padding-bottom: 2px;
+  padding: 2px 4px;
   background: #FF025E;
   border-radius: 8px;
   border: 1px solid var(--post-bg-color);
