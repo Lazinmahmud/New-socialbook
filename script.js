@@ -279,6 +279,7 @@ profileNavM.addEventListener('click', function(){
   document.querySelector('.main-container').style.display = 'none'
   document.querySelector('.mobail-nav').style.marginTop = '-3rem'
   document.querySelector('.menu-page-container').style.display = 'none'
+  document.querySelector('.mUnderline').style.marginLeft = '25%'
 });
 
 // Home Navigation Click
@@ -296,6 +297,7 @@ homNavM.addEventListener('click', function(){
   document.querySelector('.main-container').style.display = 'flex'
   document.querySelector('.mobail-nav').style.marginTop = '0'
   document.querySelector('.menu-page-container').style.display = 'none'
+  document.querySelector('.mUnderline').style.marginLeft = '1%'
 });
 
 // Notifications Navigation Click
@@ -313,6 +315,7 @@ notiNavM.addEventListener('click', function(){
   document.querySelector('.main-container').style.display = 'flex'
   document.querySelector('.mobail-nav').style.marginTop = '-3rem'
   document.querySelector('.menu-page-container').style.display = 'none'
+  document.querySelector('.mUnderline').style.marginLeft = '51%'
 });
 
 // Menu Navigation Click
@@ -327,6 +330,7 @@ menuNavM.addEventListener('click', function(){
   navMenuImg.style.border = '2px solid var(--main-color)';
   document.querySelector('.menu-page-container').style.display = 'block'
   document.querySelector('.main-container').style.display = 'none'
+  document.querySelector('.mUnderline').style.marginLeft = '75%'
   
   document.querySelector('.mobail-nav').style.marginTop = '-3rem'
   
