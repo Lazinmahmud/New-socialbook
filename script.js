@@ -265,7 +265,52 @@ let navMenuImg = document.querySelector('.nav-menu img');
 const tapSound = new Audio('tap.mp3');
 
 // Profile Navigation Click
-profileNavM.addEventListener('click', function(){
+let isHomNavMSelected = false; // ফ্ল্যাগ শুরুতে false
+
+// Home Navigation click
+homNavM.addEventListener('click', function() {
+  tapSound.play(); // Play tap sound
+
+  if (isHomNavMSelected) {
+    // যদি homNavM সিলেক্ট থাকে
+    window.location.reload(); // পেজ রিফ্রেশ
+    document.querySelector('.newFeedNotification').style.display ='none';
+  } else {
+    // যদি homNavM সিলেক্ট না থাকে
+    // Toggle icons
+    homeGrayM.style.display = 'none';
+    homeBlueM.style.display = 'block';
+    profileBlueM.style.display = 'none';
+    profileGrayM.style.display = 'block';
+    notiGrayM.style.display = 'block';
+    notiBlueM.style.display = 'none';
+
+    // Change border style
+    navMenuImg.style.border = '2px solid #808080';
+
+    // Display and hide containers
+    document.querySelector('.profile-page-container').style.display = 'none';
+    document.querySelector('.main-container').style.display = 'flex';
+    document.querySelector('.mobail-nav').style.marginTop = '0';
+    document.querySelector('.menu-page-container').style.display = 'none';
+
+    // Adjust margin
+    document.querySelector('.mUnderline').style.marginLeft = '1%';
+
+    // Add overflow-y: scroll to make the element scrollable
+    document.querySelector('.main-container').style.overflowY = 'scroll';
+
+    // Scroll to the top of the container
+    document.querySelector('.main-container').scrollTop = 0;
+
+    // Update isHomNavMSelected flag
+    isHomNavMSelected = true;
+    
+  }
+});
+
+// Update isHomNavMSelected flag when other navigation items are clicked
+profileNavM.addEventListener('click', function() {
   tapSound.play(); // Play tap sound
   profileGrayM.style.display = 'none';
   profileBlueM.style.display = 'block';
@@ -275,33 +320,17 @@ profileNavM.addEventListener('click', function(){
   notiBlueM.style.display = 'none';
   navMenuImg.style.border = '2px solid #808080';
   
-  document.querySelector('.profile-page-container').style.display = 'block'
-  document.querySelector('.main-container').style.display = 'none'
-  document.querySelector('.mobail-nav').style.marginTop = '-3rem'
-  document.querySelector('.menu-page-container').style.display = 'none'
-  document.querySelector('.mUnderline').style.marginLeft = '25%'
-});
-
-// Home Navigation Click
-homNavM.addEventListener('click', function(){
-  tapSound.play(); // Play tap sound
-  homeGrayM.style.display = 'none';
-  homeBlueM.style.display = 'block';
-  profileBlueM.style.display = 'none';
-  profileGrayM.style.display = 'block';
-  notiGrayM.style.display = 'block';
-  notiBlueM.style.display = 'none';
-  navMenuImg.style.border = '2px solid #808080';
+  document.querySelector('.profile-page-container').style.display = 'block';
+  document.querySelector('.main-container').style.display = 'none';
+  document.querySelector('.mobail-nav').style.marginTop = '-3rem';
+  document.querySelector('.menu-page-container').style.display = 'none';
+  document.querySelector('.mUnderline').style.marginLeft = '25%';
   
-  document.querySelector('.profile-page-container').style.display = 'none'
-  document.querySelector('.main-container').style.display = 'flex'
-  document.querySelector('.mobail-nav').style.marginTop = '0'
-  document.querySelector('.menu-page-container').style.display = 'none'
-  document.querySelector('.mUnderline').style.marginLeft = '1%'
+  // Update isHomNavMSelected flag
+  isHomNavMSelected = false;
 });
 
-// Notifications Navigation Click
-notiNavM.addEventListener('click', function(){
+notiNavM.addEventListener('click', function() {
   tapSound.play(); // Play tap sound
   homeBlueM.style.display = 'none';
   homeGrayM.style.display = 'block';
@@ -311,15 +340,17 @@ notiNavM.addEventListener('click', function(){
   notiBlueM.style.display = 'block';
   navMenuImg.style.border = '2px solid #808080';
   
-  document.querySelector('.profile-page-container').style.display = 'none'
-  document.querySelector('.main-container').style.display = 'flex'
-  document.querySelector('.mobail-nav').style.marginTop = '-3rem'
-  document.querySelector('.menu-page-container').style.display = 'none'
-  document.querySelector('.mUnderline').style.marginLeft = '51%'
+  document.querySelector('.profile-page-container').style.display = 'none';
+  document.querySelector('.main-container').style.display = 'flex';
+  document.querySelector('.mobail-nav').style.marginTop = '-3rem';
+  document.querySelector('.menu-page-container').style.display = 'none';
+  document.querySelector('.mUnderline').style.marginLeft = '51%';
+  
+  // Update isHomNavMSelected flag
+  isHomNavMSelected = false;
 });
 
-// Menu Navigation Click
-menuNavM.addEventListener('click', function(){
+menuNavM.addEventListener('click', function() {
   tapSound.play(); // Play tap sound
   homeBlueM.style.display = 'none';
   homeGrayM.style.display = 'block';
@@ -328,13 +359,15 @@ menuNavM.addEventListener('click', function(){
   notiGrayM.style.display = 'block';
   notiBlueM.style.display = 'none';
   navMenuImg.style.border = '2px solid var(--main-color)';
-  document.querySelector('.menu-page-container').style.display = 'block'
-  document.querySelector('.main-container').style.display = 'none'
-  document.querySelector('.mUnderline').style.marginLeft = '75%'
+  document.querySelector('.menu-page-container').style.display = 'block';
+  document.querySelector('.main-container').style.display = 'none';
+  document.querySelector('.mUnderline').style.marginLeft = '75%';
   
-  document.querySelector('.mobail-nav').style.marginTop = '-3rem'
+  document.querySelector('.mobail-nav').style.marginTop = '-3rem';
+  document.querySelector('.profile-page-container').style.display = 'none';
   
-  document.querySelector('.profile-page-container').style.display = 'none'
+  // Update isHomNavMSelected flag
+  isHomNavMSelected = false;
 });
 
 
