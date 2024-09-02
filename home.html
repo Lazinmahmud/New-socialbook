@@ -54,7 +54,8 @@
     </div>
     <div class="nav-bottom">
       
-      <a href="#" >
+      <div class="navMDisplayFlex">
+        <a href="#" >
       <div id="homNavM" class="nav-mobail">
         <img id="homeBlueM" src="home-blue.png">
         <img id="homeGrayM" src="home.png">
@@ -80,8 +81,9 @@
         </div>
       </div>
       </a>
+      </div>
       
-      
+       <div class="mUnderline"></div>
     </div>
   </div>
   
@@ -150,6 +152,17 @@
          <p id="postTextarea">What do you think?</p>
        </div>
     </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <!---
     <div class="post-upload-pogress-container">
       <img src="post.jpg">
@@ -158,7 +171,7 @@
     
     <audio id="postSound" src="post-sound.mp3" preload="auto"></audio>
     
- <!---<div class="post ">
+<!--- <div class="post ">
       <div class="post-header_and_post_content">
         <div class="profile-box ">
           <div class="post-profile">
@@ -224,7 +237,7 @@
                
       </div>--->
       
-     <!----- <div class="post ">
+     <!----<div class="post ">
       <div class="post-header_and_post_content">
               <div class="profile-box ">
                 <div class="post-profile">
@@ -642,7 +655,16 @@
                             <h4>Share</h4>
                         </div>
                     </div>
-                </div>`;
+                </div>
+                <div class="post-comment-container">
+           <div class="comment-profile">
+             <img class="profile-img">
+           </div>
+           <div class="comment-inp-box">
+             <input type="text" placeholder="Write a public comment...">
+           </div>
+           <button class="comment-send-button" type="button"><i class='bx bxs-send' ></i></button>
+         </div>`;
 
             const postContainer1 = document.createElement('div');
             postContainer1.className = 'post';
@@ -789,7 +811,7 @@ window.addEventListener('load', () => {
           
           const imageHTML = post.imageUrl ? `<div class="post-img"><img src="${post.imageUrl}" id="databaseImg"></div>` : '';
           const profileImageHTML = post.profileImageUrl 
-              ? `<img src="${post.profileImageUrl}" alt="Profile Image">` 
+              ? `<img src="${post.profileImageUrl}">` 
               : `<img src="no-profile.png" >`;
 
           postElement.innerHTML = `
@@ -827,7 +849,16 @@ window.addEventListener('load', () => {
         <h4>Share</h4>
       </div>
     </div>
-  </div>`;
+  </div>
+  <div class="post-comment-container">
+           <div class="comment-profile">
+             <img class="profile-img">
+           </div>
+           <div class="comment-inp-box">
+             <input type="text" placeholder="Write a public comment...">
+           </div>
+           <button class="comment-send-button" type="button"><i class='bx bxs-send' ></i></button>
+         </div>`;
           
           postContainer.insertAdjacentElement('afterend', postElement);
         }
@@ -852,7 +883,7 @@ window.addEventListener('load', () => {
 
           const imageHTML = post.imageUrl ? `<div class="post-img"><img src="${post.imageUrl}" id="databaseImg"></div>` : '';
           const profileImageHTML = post.profileImageUrl 
-              ? `<img src="${post.profileImageUrl}" alt="Profile Image">` 
+              ? `<img src="${post.profileImageUrl}">` 
               : `<img src="no-profile.png">`;
 
           postElement.innerHTML = `
@@ -890,7 +921,16 @@ window.addEventListener('load', () => {
         <h4>Share</h4>
       </div>
     </div>
-  </div>`;
+  </div>
+  <div class="post-comment-container">
+           <div class="comment-profile">
+             <img class="profile-img">
+           </div>
+           <div class="comment-inp-box">
+             <input type="text" placeholder="Write a public comment...">
+           </div>
+           <button class="comment-send-button" type="button"><i class='bx bxs-send' ></i></button>
+         </div>`;
           
           profilePostContainer.insertAdjacentElement('afterbegin', postElement);
         }
@@ -928,11 +968,14 @@ window.addEventListener('load', () => {
                 currentData = snapshot.val();
             }
 
+            let profileDownloadURL;
+            let coverDownloadURL;
+
             // Update Profile Image if a new one is provided
             if (profileFile) {
                 const profileImgRef = ref(storage, 'profileImages/' + profileFile.name);
                 const uploadResult = await uploadBytes(profileImgRef, profileFile);
-                const profileDownloadURL = await getDownloadURL(uploadResult.ref);
+                profileDownloadURL = await getDownloadURL(uploadResult.ref);
                 currentData.profileImageURL = profileDownloadURL;
             }
 
@@ -940,7 +983,7 @@ window.addEventListener('load', () => {
             if (coverFile) {
                 const coverImgRef = ref(storage, 'coverImages/' + coverFile.name);
                 const coverUploadResult = await uploadBytes(coverImgRef, coverFile);
-                const coverDownloadURL = await getDownloadURL(coverUploadResult.ref);
+                coverDownloadURL = await getDownloadURL(coverUploadResult.ref);
                 currentData.coverImageURL = coverDownloadURL;
             }
 
@@ -948,6 +991,23 @@ window.addEventListener('load', () => {
             await set(userProfileDetailsRef, currentData);
 
             alert('Profile and/or cover images updated successfully!');
+
+            // Update all images with class "profile-img" if profile image was updated
+            if (profileDownloadURL) {
+                const profileImgs = document.querySelectorAll('.profile-img');
+                profileImgs.forEach(img => {
+                    img.src = profileDownloadURL;
+                });
+            }
+
+            // Update all images with class "cover-img" if cover image was updated
+            if (coverDownloadURL) {
+                const coverImgs = document.querySelectorAll('.cover-img');
+                coverImgs.forEach(img => {
+                    img.src = coverDownloadURL;
+                });
+            }
+
         } catch (error) {
             console.error('Error uploading images:', error);
         }
