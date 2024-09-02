@@ -264,8 +264,7 @@ let navMenuImg = document.querySelector('.nav-menu img');
 // Create an audio object
 const tapSound = new Audio('tap.mp3');
 
-// Profile Navigation Click
-let isHomNavMSelected = false; // ফ্ল্যাগ শুরুতে false
+let isHomNavMSelected = true; // ফ্ল্যাগ শুরুতে true
 
 // Home Navigation click
 homNavM.addEventListener('click', function() {
@@ -273,8 +272,10 @@ homNavM.addEventListener('click', function() {
 
   if (isHomNavMSelected) {
     // যদি homNavM সিলেক্ট থাকে
-    window.location.reload(); // পেজ রিফ্রেশ
-    document.querySelector('.newFeedNotification').style.display ='none';
+    document.querySelector('.main-container').scrollTop = 0; // স্ক্রোল টপে নিয়ে যাওয়া
+    setTimeout(function() {
+      window.location.reload(); // পেজ রিফ্রেশ
+    }, 0);
   } else {
     // যদি homNavM সিলেক্ট না থাকে
     // Toggle icons
@@ -305,7 +306,6 @@ homNavM.addEventListener('click', function() {
 
     // Update isHomNavMSelected flag
     isHomNavMSelected = true;
-    
   }
 });
 
@@ -369,7 +369,6 @@ menuNavM.addEventListener('click', function() {
   // Update isHomNavMSelected flag
   isHomNavMSelected = false;
 });
-
 
 
 
