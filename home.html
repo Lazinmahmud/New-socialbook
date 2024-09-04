@@ -59,7 +59,7 @@
       <div id="homNavM" class="nav-mobail">
         <img id="homeBlueM" src="home-blue.png">
         <img id="homeGrayM" src="home.png">
-        <div class="newFeedNotification">0</div>
+        <div class="newFeedNotification">+</div>
       </div>
       </a>
       <a href="#">
@@ -451,12 +451,11 @@
   
   
   
-  
 
     <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
   import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
-  import { getDatabase, ref as dbRef, set, get } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+  import { getDatabase, ref as dbRef, set, get,remove, onChildAdded, onChildRemoved, update, onChildChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
   
   const firebaseConfig = {
     apiKey: "AIzaSyDLiT3pWoHy1IK3StGdJQsiVndCSgl7XB8",
@@ -590,105 +589,18 @@
                 text: text,
                 timestamp: postId,
                 uploadTime: uploadTime,
-                imageUrl: imageUrl, // Save image URL if available
-                profileImageUrl: profileImageUrl // Save profile image URL
+                imageUrl: imageUrl,
+                profileImageUrl: profileImageUrl
             });
         }).then(() => {
-            // Save post details under the user's email node
-            let UserCreds = JSON.parse(localStorage.getItem("user-creds"));
-            if (UserCreds && UserCreds.email) {
-                const email = UserCreds.email;
-                const formattedEmail = email.replace('.', ','); // Format email for database key
-                const userPostsRef = dbRef(database, 'User_Posts/' + formattedEmail + '/' + postId);
-
-                return set(userPostsRef, {
-                    firstName: userFirstName,
-                    lastName: userLastName,
-                    text: text,
-                    timestamp: postId,
-                    uploadTime: uploadTime,
-                    imageUrl: imageUrl,
-                    profileImageUrl: profileImageUrl
-                });
-            } else {
-                return Promise.resolve(); // If no user credentials, resolve to avoid breaking the chain
-            }
-        }).then(() => {
-            const postSound = document.getElementById('postSound');
-            postSound.play();
-
-            // Convert newlines to <br> tags
-            const formattedText = text.replace(/\n/g, '<br>');
-
-            const postContainerHTML = `
-                <div class="post-header_and_post_content">
-                    <div class="profile-box">
-                        <div class="post-profile">
-                            <img src="${profileImageUrl || 'no-profile.png'}">
-                        </div>
-                    </div>
-                    <div class="post-userName-andtime">
-                        <h4>${userFirstName} ${userLastName}</h4>
-                        <p class="span" id="post-time-${postId}">${formatRelativeTime(uploadTime)} <span>•</span><span> <i class='bx bx-world'></i></span></p>
-                    </div>
-                    <div class="post-menu">
-                        <i class='bx bx-dots-vertical-rounded'></i>
-                    </div>
-                </div>
-                <div class="post-text">
-                    <p>${formattedText}</p>
-                </div>
-                ${imageUrl ? `<div class="post-img"><img src="${imageUrl}" class="lazyload" id="databaseImg"></div>` : ''}
-                <div class="post-activity-container">
-                    <div class="post-activity-box ">
-                        <div onclick="toggleLike('${postId}')" class="like-box " id="like-box-${postId}">
-                            <img id="likeGray-${postId}" src="like.png">
-                            <img id="likeBlue-${postId}" src="like-blue.png" style="display:none;">
-                            <h4 id="likeText-${postId}">Like</h4>
-                        </div>
-                        <div class="like-box ">
-                            <img  src="comment.png">
-                            <h4>Comment</h4>
-                        </div>
-                        <div class="like-box ">
-                            <img src="share.png">
-                            <h4>Share</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="post-comment-container">
-           <div class="comment-profile">
-             <img class="profile-img">
-           </div>
-           <div class="comment-inp-box">
-             <input type="text" placeholder="Write a public comment...">
-           </div>
-           <button class="comment-send-button" type="button"><i class='bx bxs-send' ></i></button>
-         </div>`;
-
-            const postContainer1 = document.createElement('div');
-            postContainer1.className = 'post';
-            postContainer1.innerHTML = postContainerHTML;
-
-            const postContainer2 = postContainer1.cloneNode(true); // Clone for the second insertion
-
-            // Insert under post-create-container
-            progressContainer.insertAdjacentElement('afterend', postContainer1);
-            progressContainer.style.display = 'none';
-
-            // Insert within profile-page-post
-            const profilePagePost = document.querySelector('.profile-page-post');
-            if (profilePagePost) {
-                profilePagePost.insertAdjacentElement('afterbegin', postContainer2);
-            }
-
             document.getElementById('textareaPlaceholder').value = '';
             document.getElementById('fileInput').value = '';
             document.getElementById('selectedImage').src = '';
+            document.querySelector('.post-upload-pogress-container').style.display = 'none'; // Hide progress container
 
-            // ** New code to save notification in a bucket **
-            saveNotificationBucket(userId, postId, uploadTime, userFirstName, userLastName);
-
+            // Play the post upload sound
+            const postSound = document.getElementById('postSound');
+            postSound.play();
         }).catch(error => {
             console.error("Error creating post: ", error);
         });
@@ -697,6 +609,158 @@
         alert("Please write something or select an image before posting.");
     }
 });
+
+
+// Fetch and display posts when the page loads
+window.addEventListener('load', () => {
+    const loadingContainer = document.querySelector('.loading-post-container');
+    loadingContainer.style.display = 'block';
+
+    let initialLoadCompleted = false;
+    let postsCount = 0;
+    const newFeedNotification = document.querySelector('.newFeedNotification');
+
+    // Function to handle new posts
+    const handleNewPost = () => {
+        if (localStorage.getItem('notificationHidden') !== 'true') {
+            newFeedNotification.style.display = 'block';
+        }
+    };
+
+    // Check local storage to hide notification if it was previously hidden
+    if (localStorage.getItem('notificationHidden') === 'true') {
+        newFeedNotification.style.display = 'none';
+    }
+
+    // Listen for new posts and add them to the DOM
+    onChildAdded(dbRef(database, 'All_Post'), (snapshot) => {
+        if (snapshot.exists()) {
+            const post = snapshot.val();
+            const postId = snapshot.key;
+            const postContainer = document.querySelector('.post-create-container');
+
+            if (document.getElementById(`post-${postId}`)) {
+                return;
+            }
+
+            // Show the new feed notification if the user has not hidden it
+            handleNewPost();
+
+            const postElement = document.createElement('div');
+            postElement.className = 'post';
+            postElement.id = `post-${postId}`;
+
+            const imageHTML = post.imageUrl ? `<div class="post-img"><img src="${post.imageUrl}" class="lazyload" id="databaseImg"></div>` : '';
+            const profileImageHTML = post.profileImageUrl
+                ? `<img src="${post.profileImageUrl}">`
+                : `<img src="no-profile.png">`;
+
+            postElement.innerHTML = `
+                <div class="post-header_and_post_content">
+                    <div class="profile-box">
+                        <div class="post-profile">
+                            ${profileImageHTML}
+                        </div>
+                    </div>
+                    <div class="post-userName-andtime">
+                        <h4>${post.firstName} ${post.lastName}</h4>
+                        <p class="span" id="post-time-${postId}" data-upload-time="${post.uploadTime}">${formatRelativeTime(post.uploadTime)} <span>•</span><span> <i class='bx bx-world'></i></span></p>
+                    </div>
+                    <div class="post-menu">
+                        <i class='bx bx-dots-vertical-rounded'></i>
+                    </div>
+                </div>
+                <div class="post-text">
+                    <p>${post.text.replace(/\n/g, '<br>')}</p>
+                </div>
+                ${imageHTML}
+                <div class="post-activity-container">
+                    <div class="post-activity-box">
+                        <div onclick="toggleLike('${postId}')" class="like-box" id="like-box-${postId}">
+                            <img id="likeGray-${postId}" src="like.png">
+                            <img id="likeBlue-${postId}" src="like-blue.png" style="display:none;">
+                            <h4 id="likeText-${postId}">Like</h4>
+                        </div>
+                        <div class="like-box">
+                            <img src="comment.png">
+                            <h4>Comment</h4>
+                        </div>
+                        <div class="like-box">
+                            <img src="share.png">
+                            <h4>Share</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-comment-container">
+                    <div class="comment-profile">
+                        <img class="profile-img">
+                    </div>
+                    <div class="comment-inp-box">
+                        <input type="text" placeholder="Write a public comment...">
+                    </div>
+                    <button class="comment-send-button" type="button"><i class='bx bxs-send'></i></button>
+                </div>`;
+
+            postContainer.insertAdjacentElement('afterend', postElement);
+
+            document.querySelector('.post-upload-pogress-container').style.display = 'none';
+
+            if (!initialLoadCompleted) {
+                loadingContainer.style.display = 'none';
+                initialLoadCompleted = true;
+            }
+
+            postsCount += 1;
+
+            // Clear notification hidden status when a new post is added
+            localStorage.removeItem('notificationHidden');
+
+            setInterval(updatePostTimes, 60000);
+        }
+    }, (error) => {
+        console.error("Error fetching posts with onChildAdded: ", error);
+    });
+
+    onChildRemoved(dbRef(database, 'All_Post'), (snapshot) => {
+        const postId = snapshot.key;
+
+        const postElement = document.getElementById(`post-${postId}`);
+        if (postElement) {
+            postElement.remove();
+        }
+
+        postsCount -= 1;
+
+        checkNoPosts();
+    }, (error) => {
+        console.error("Error fetching posts with onChildRemoved: ", error);
+    });
+
+    // Hide notification on click and set localStorage to remember
+    newFeedNotification.addEventListener('click', () => {
+        newFeedNotification.style.display = 'none';
+        localStorage.setItem('notificationHidden', 'true');
+    });
+
+    // Hide notification on homNavM click
+    document.querySelector('#homNavM').addEventListener('click', () => {
+        newFeedNotification.style.display = 'none';
+        localStorage.setItem('notificationHidden', 'true');
+    });
+
+    // Optionally, hide the notification when the user scrolls to the posts section
+    window.addEventListener('scroll', () => {
+        const postContainer = document.querySelector('.post-create-container');
+        const postContainerPosition = postContainer.getBoundingClientRect().top;
+        if (postContainerPosition < window.innerHeight) {
+            newFeedNotification.style.display = 'none';
+            localStorage.setItem('notificationHidden', 'true');
+        }
+    });
+});
+
+
+
 
 // Lazy loading with IntersectionObserver
 document.addEventListener("DOMContentLoaded", function() {
@@ -726,56 +790,6 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 });
 
-
-// Function to save notification in a bucket
-function saveNotificationBucket(userId, postId, uploadTime, userFirstName, userLastName) {
-    const notificationId = new Date().getTime(); // Unique notification ID
-    const userBucketRef = dbRef(database, `New_Notifi/${userId}`); // Create bucket for user notifications
-
-    // Create a new notification object
-    const newNotificationRef = dbRef(database, `New_Notifi/${userId}/${notificationId}`);
-    
-    set(newNotificationRef, {
-        userId: userId,
-        postId: postId,
-        timestamp: notificationId,
-        uploadTime: uploadTime,
-        message: `${userFirstName} ${userLastName} has posted a new update.`,
-        read: false // To track if the notification has been read
-    }).then(() => {
-        console.log("Notification saved successfully in user's notification bucket.");
-        updateNotificationCount(userId); // Update notification count after saving
-    }).catch(error => {
-        console.error("Error saving notification: ", error);
-    });
-}
-
-// Function to update the notification count in the UI
-function updateNotificationCount(userId) {
-    const userBucketRef = dbRef(database, `New_Notifi/${userId}`);
-
-    // Get all notifications for the user
-    get(userBucketRef).then(snapshot => {
-        if (snapshot.exists()) {
-            const notifications = snapshot.val();
-            const unreadCount = Object.values(notifications).filter(notification => !notification.read).length;
-
-            // Update the count in the UI
-            document.querySelector('.newFeedNotification').innerText = unreadCount;
-        } else {
-            // If no notifications, set count to 0
-            document.querySelector('.newFeedNotification').innerText = 0;
-        }
-    }).catch(error => {
-        console.error("Error fetching notifications: ", error);
-    });
-}
-
-// Call updateNotificationCount when the page loads to set the initial notification count
-window.onload = function() {
-    const userId = "USER_ID_HERE"; // Replace with actual user ID
-    updateNotificationCount(userId);
-};
 
 
 function formatRelativeTime(isoDate) {
@@ -808,170 +822,15 @@ if (diffInDays <= 5) return `${diffInDays}d ago`;
 function updatePostTimes() {
   const allPostTimes = document.querySelectorAll('[id^="post-time-"]');
   allPostTimes.forEach(postTimeElement => {
-    const postId = postTimeElement.id.split('-')[2]; // Extract postId from element id
     const postTime = postTimeElement.getAttribute('data-upload-time');
-    postTimeElement.innerHTML = `${formatRelativeTime(postTime)} <span>•</span><span> <i class='bx bx-world'></i></span>`;
+    if (postTime) {
+      // Check if the post time is being updated correctly
+      postTimeElement.innerHTML = `${formatRelativeTime(postTime)} <span>•</span><span> <i class='bx bx-world'></i></span>`;
+    }
   });
 }
 
-// Fetch and display posts when the page loads
-window.addEventListener('load', () => {
-  const loadingContainer = document.querySelector('.loading-post-container');
-  loadingContainer.style.display = 'block';
 
-  let UserCreds = JSON.parse(localStorage.getItem("user-creds"));
-  if (UserCreds && UserCreds.email) {
-    const email = UserCreds.email;
-    const formattedEmail = email.replace('.', ','); // Format email for database key
-    
-    // Fetch and display all posts from 'posts'
-    get(dbRef(database, 'All_Post')).then(snapshot => {
-      if (snapshot.exists()) {
-        const posts = snapshot.val();
-        const postContainer = document.querySelector('.post-create-container');
-
-        for (const postId in posts) {
-          const post = posts[postId];
-          const postElement = document.createElement('div');
-          postElement.className = 'post';
-          
-          const imageHTML = post.imageUrl ? `<div class="post-img"><img src="${post.imageUrl}" class="lazyload" id="databaseImg"></div>` : '';
-          const profileImageHTML = post.profileImageUrl 
-              ? `<img src="${post.profileImageUrl}">` 
-              : `<img src="no-profile.png" >`;
-
-          postElement.innerHTML = `
-  <div class="post-header_and_post_content">
-    <div class="profile-box">
-      <div class="post-profile">
-        ${profileImageHTML}
-      </div>
-    </div>
-    <div class="post-userName-andtime">
-      <h4>${post.firstName} ${post.lastName}</h4>
-      <p class="span" id="post-time-${postId}" data-upload-time="${post.uploadTime}">${formatRelativeTime(post.uploadTime)} <span>•</span><span> <i class='bx bx-world'></i></span></p>
-    </div>
-    <div class="post-menu">
-      <i class='bx bx-dots-vertical-rounded'></i>
-    </div>
-  </div>
-  <div class="post-text">
-    <p>${post.text.replace(/\n/g, '<br>')}</p>
-  </div>
-  ${imageHTML}
-  <div class="post-activity-container">
-    <div class="post-activity-box">
-      <div onclick="toggleLike('${postId}')" class="like-box" id="like-box-${postId}">
-        <img id="likeGray-${postId}" src="like.png">
-        <img id="likeBlue-${postId}" src="like-blue.png" style="display:none;">
-        <h4 id="likeText-${postId}">Like</h4>
-      </div>
-      <div class="like-box">
-        <img src="comment.png">
-        <h4>Comment</h4>
-      </div>
-      <div class="like-box">
-        <img src="share.png">
-        <h4>Share</h4>
-      </div>
-    </div>
-  </div>
-  <div class="post-comment-container">
-           <div class="comment-profile">
-             <img class="profile-img">
-           </div>
-           <div class="comment-inp-box">
-             <input type="text" placeholder="Write a public comment...">
-           </div>
-           <button class="comment-send-button" type="button"><i class='bx bxs-send' ></i></button>
-         </div>`;
-          
-          postContainer.insertAdjacentElement('afterend', postElement);
-        }
-
-        // Start interval to update post times every minute
-        setInterval(updatePostTimes, 60000); // Update every 60 seconds
-      }
-    }).catch(error => {
-      console.error("Error fetching all posts: ", error);
-    });
-
-    // Fetch and display only logged-in user's posts from 'User_Posts'
-    get(dbRef(database, 'User_Posts/' + formattedEmail)).then(snapshot => {
-      if (snapshot.exists()) {
-        const userPosts = snapshot.val();
-        const profilePostContainer = document.querySelector('.profile-page-post');
-
-        for (const postId in userPosts) {
-          const post = userPosts[postId];
-          const postElement = document.createElement('div');
-          postElement.className = 'post';
-
-          const imageHTML = post.imageUrl ? `<div class="post-img"><img src="${post.imageUrl}" class="lazyload" id="databaseImg"></div>` : '';
-          const profileImageHTML = post.profileImageUrl 
-              ? `<img src="${post.profileImageUrl}">` 
-              : `<img src="no-profile.png">`;
-
-          postElement.innerHTML = `
-  <div class="post-header_and_post_content">
-    <div class="profile-box">
-      <div class="post-profile">
-        ${profileImageHTML}
-      </div>
-    </div>
-    <div class="post-userName-andtime">
-      <h4>${post.firstName} ${post.lastName}</h4>
-      <p class="span" id="post-time-${postId}" data-upload-time="${post.uploadTime}">${formatRelativeTime(post.uploadTime)} <span>•</span><span> <i class='bx bx-world'></i></span></p>
-    </div>
-    <div class="post-menu">
-      <i class='bx bx-dots-vertical-rounded'></i>
-    </div>
-  </div>
-  <div class="post-text">
-    <p>${post.text.replace(/\n/g, '<br>')}</p>
-  </div>
-  ${imageHTML}
-  <div class="post-activity-container">
-    <div class="post-activity-box">
-      <div onclick="toggleLike('${postId}')" class="like-box" id="like-box-${postId}">
-        <img id="likeGray-${postId}" src="like.png">
-        <img id="likeBlue-${postId}" src="like-blue.png" style="display:none;">
-        <h4 id="likeText-${postId}">Like</h4>
-      </div>
-      <div class="like-box">
-        <img src="comment.png">
-        <h4>Comment</h4>
-      </div>
-      <div class="like-box">
-        <img src="share.png">
-        <h4>Share</h4>
-      </div>
-    </div>
-  </div>
-  <div class="post-comment-container">
-           <div class="comment-profile">
-             <img class="profile-img">
-           </div>
-           <div class="comment-inp-box">
-             <input type="text" placeholder="Write a public comment...">
-           </div>
-           <button class="comment-send-button" type="button"><i class='bx bxs-send' ></i></button>
-         </div>`;
-          
-          profilePostContainer.insertAdjacentElement('afterbegin', postElement);
-        }
-
-        // Start interval to update post times every minute
-        setInterval(updatePostTimes, 60000); // Update every 60 seconds
-      }
-    }).catch(error => {
-      console.error("Error fetching user posts: ", error);
-    }).finally(() => {
-      // Hide the loading spinner after all posts are loaded
-      loadingContainer.style.display = 'none';
-    });
-  }
-});
   
   
   
@@ -1122,8 +981,8 @@ window.addEventListener('load', loadProfileAndCoverImages);
                 element.innerText = `${UserInfo.firstName} ${UserInfo.lastName}`;
             });
             // Set the placeholder text with user's first name
-            PostTextarea.innerText = `What do you think ${UserInfo.firstName}?`;
-            textareaPlaceholder.placeholder = `What do you think ${UserInfo.firstName}?`
+            PostTextarea.innerText = `What do you think, ${UserInfo.firstName}?`;
+            textareaPlaceholder.placeholder = `What do you think, ${UserInfo.firstName}?`
             nameInput.value = `${UserInfo.firstName} ${UserInfo.lastName}`;
         }
     }
