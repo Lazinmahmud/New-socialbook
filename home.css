@@ -39,7 +39,6 @@ body{
   width: 100%;
   box-shadow: 0 0 4px rgba(0,0,0,0.3);
   background: var(--post-bg-color);
-  
   position: fixed ;
   top: -1px;
   z-index: 1;
@@ -375,6 +374,7 @@ nav {
   object-fit: cover;
   border-radius: 50%;
   border: 1px solid #ccc;
+  background: var(--off-white-color);
 }
 .textarea{
   width: 100%;
@@ -1190,7 +1190,7 @@ nav {
   position: relative;
 }
 .newFeedNotification{
-  padding: 2px 4px;
+  padding: 2px 5px;
   background: #FF025E;
   border-radius: 8px;
   border: 1px solid var(--post-bg-color);
