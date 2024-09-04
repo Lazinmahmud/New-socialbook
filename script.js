@@ -274,7 +274,7 @@ homNavM.addEventListener('click', function() {
     // যদি homNavM সিলেক্ট থাকে
     document.querySelector('.main-container').scrollTop = 0; // স্ক্রোল টপে নিয়ে যাওয়া
     setTimeout(function() {
-      window.location.reload(); // পেজ রিফ্রেশ
+   //   window.location.reload(); // পেজ রিফ্রেশ
     }, 0);
   } else {
     // যদি homNavM সিলেক্ট না থাকে
