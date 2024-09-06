@@ -455,7 +455,7 @@
     <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
   import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
-  import { getDatabase, ref as dbRef, set, get,remove, onChildAdded, onChildRemoved, update, onChildChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+  import { getDatabase, ref as dbRef, set, get,remove, onChildAdded, onChildRemoved, update, onChildChanged, onValue} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
   
   const firebaseConfig = {
     apiKey: "AIzaSyDLiT3pWoHy1IK3StGdJQsiVndCSgl7XB8",
@@ -487,154 +487,156 @@
   }
 });
   
-  document.getElementById('uploadBtn').addEventListener('click', function () {
-  const text = document.getElementById('textareaPlaceholder').value;
-  const fileInput = document.getElementById('fileInput');
-  const file = fileInput.files[0];
+  // Event listener for upload button
+document.getElementById('uploadBtn').addEventListener('click', function () {
+    const text = document.getElementById('textareaPlaceholder').value;
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
 
-  if (text || file) {
-    setTimeout(function () {
-      const popupOpachityElement = document.querySelector('.popup-opachity');
-      if (popupOpachityElement) {
-        popupOpachityElement.style.display = 'none';
-        document.querySelector('.mobail-nav').style.zIndex = '1';
-      }
-    }, 10);
+    if (text || file) {
+        setTimeout(function () {
+            const popupOpachityElement = document.querySelector('.popup-opachity');
+            if (popupOpachityElement) {
+                popupOpachityElement.style.display = 'none';
+                document.querySelector('.mobail-nav').style.zIndex = '1';
+            }
+        }, 10);
 
-    const userId = 'user123'; // Replace with actual user ID
-    const userFirstName = UserInfo.firstName;
-    const userLastName = UserInfo.lastName;
-    const postId = new Date().getTime(); // Unique post ID based on timestamp
-    const uploadTime = new Date().toISOString(); // Save current time
+        const userId = 'user123'; // Replace with actual user ID
+        const userFirstName = UserInfo.firstName;
+        const userLastName = UserInfo.lastName;
+        const postId = new Date().getTime(); // Unique post ID based on timestamp
+        const uploadTime = new Date().toISOString(); // Save current time
 
-    let imageUrl = '';
-    let profileImageUrl = '';
+        let imageUrl = '';
+        let profileImageUrl = '';
 
-    // Create the post upload progress container
-    const progressContainer = document.createElement('div');
-    progressContainer.className = 'post-upload-pogress-container';
-    const progressImage = document.createElement('img');
-    const progressText = document.createElement('p');
-    progressText.textContent = 'Posting...';
+        // Create the post upload progress container
+        const progressContainer = document.createElement('div');
+        progressContainer.className = 'post-upload-pogress-container';
+        const progressImage = document.createElement('img');
+        const progressText = document.createElement('p');
+        progressText.textContent = 'Posting...';
 
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        progressImage.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    } else {
-      progressImage.src = '';
-    }
-
-    const progressBar = document.createElement('span');
-    progressBar.className = 'imgUpProgress';
-
-    progressContainer.appendChild(progressImage);
-    progressContainer.appendChild(progressText);
-    progressContainer.appendChild(progressBar);
-    const postCreateContainer = document.querySelector('.post-create-container');
-    postCreateContainer.insertAdjacentElement('afterend', progressContainer);
-
-    // Function to simulate progress
-    let progress = 0;
-    const simulateProgress = setInterval(() => {
-      if (progress < 100) {
-        progress += 5; // Increment progress (adjust speed here)
-        progressBar.style.background = `conic-gradient(var(--main-color) ${progress}%, transparent 0)`; // Simulate the fill
-      } else {
-        clearInterval(simulateProgress); // Stop progress animation when complete
-      }
-    }, 200); // Speed of the progress increment
-
-    // Function to handle image upload
-    const uploadImage = () => {
-      return new Promise((resolve, reject) => {
         if (file) {
-          const storageRef = ref(storage, 'images/' + postId + '-' + file.name);
-          uploadBytes(storageRef, file)
-            .then((snapshot) => {
-              getDownloadURL(snapshot.ref)
-                .then((url) => {
-                  imageUrl = url;
-                  clearInterval(simulateProgress); // Stop progress when upload is complete
-                  progressBar.style.background = `conic-gradient(var(--main-color) 100%, transparent 0)`; // Complete progress fill
-                  resolve();
-                })
-                .catch(reject);
-            })
-            .catch(reject);
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                progressImage.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
         } else {
-          resolve();
+            progressImage.src = '';
         }
-      });
-    };
 
-    // Fetch profile image from Firebase Realtime Database
-    const fetchProfileImage = () => {
-      return new Promise((resolve, reject) => {
-        let UserCreds = JSON.parse(localStorage.getItem('user-creds'));
-        if (UserCreds && UserCreds.email) {
-          const email = UserCreds.email;
-          const formattedEmail = email.replace('.', ','); // Format email for database key
-          const userProfileDetailsRef = dbRef(database, 'User_Profile_details/' + formattedEmail);
+        const progressBar = document.createElement('span');
+        progressBar.className = 'imgUpProgress';
 
-          get(userProfileDetailsRef)
-            .then((snapshot) => {
-              if (snapshot.exists()) {
-                const data = snapshot.val();
-                if (data.profileImageURL) {
-                  profileImageUrl = data.profileImageURL;
+        progressContainer.appendChild(progressImage);
+        progressContainer.appendChild(progressText);
+        progressContainer.appendChild(progressBar);
+        const postCreateContainer = document.querySelector('.post-create-container');
+        postCreateContainer.insertAdjacentElement('afterend', progressContainer);
+
+        // Function to simulate progress
+        let progress = 0;
+        const simulateProgress = setInterval(() => {
+            if (progress < 100) {
+                progress += 5; // Increment progress (adjust speed here)
+                progressBar.style.background = `conic-gradient(var(--main-color) ${progress}%, transparent 0)`; // Simulate the fill
+            } else {
+                clearInterval(simulateProgress); // Stop progress animation when complete
+            }
+        }, 200); // Speed of the progress increment
+
+        // Function to handle image upload
+        const uploadImage = () => {
+            return new Promise((resolve, reject) => {
+                if (file) {
+                    const storageRef = ref(storage, 'images/' + postId + '-' + file.name);
+                    uploadBytes(storageRef, file)
+                        .then((snapshot) => {
+                            getDownloadURL(snapshot.ref)
+                                .then((url) => {
+                                    imageUrl = url;
+                                    clearInterval(simulateProgress); // Stop progress when upload is complete
+                                    progressBar.style.background = `conic-gradient(var(--main-color) 100%, transparent 0)`; // Complete progress fill
+                                    resolve();
+                                })
+                                .catch(reject);
+                        })
+                        .catch(reject);
+                } else {
+                    resolve();
                 }
-                resolve();
-              } else {
-                console.log('No profile details found for this user.');
-                resolve(); // Resolve even if no data found
-              }
+            });
+        };
+
+        // Fetch profile image from Firebase Realtime Database
+        const fetchProfileImage = () => {
+            return new Promise((resolve, reject) => {
+                let UserCreds = JSON.parse(localStorage.getItem('user-creds'));
+                if (UserCreds && UserCreds.email) {
+                    const email = UserCreds.email;
+                    const formattedEmail = email.replace('.', ','); // Format email for database key
+                    const userProfileDetailsRef = dbRef(database, 'User_Profile_details/' + formattedEmail);
+
+                    get(userProfileDetailsRef)
+                        .then((snapshot) => {
+                            if (snapshot.exists()) {
+                                const data = snapshot.val();
+                                if (data.profileImageURL) {
+                                    profileImageUrl = data.profileImageURL;
+                                }
+                                resolve();
+                            } else {
+                                console.log('No profile details found for this user.');
+                                resolve(); // Resolve even if no data found
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('Error fetching profile image:', error);
+                            reject(error);
+                        });
+                } else {
+                    console.error('No user credentials found in local storage.');
+                    resolve(); // Resolve even if no user credentials
+                }
+            });
+        };
+
+        // Save text and user details to Firebase Realtime Database
+        Promise.all([uploadImage(), fetchProfileImage()])
+            .then(() => {
+                return set(dbRef(database, 'All_Post/' + postId), {
+                    userId: userId,
+                    firstName: userFirstName,
+                    lastName: userLastName,
+                    text: text,
+                    timestamp: postId,
+                    uploadTime: uploadTime,
+                    imageUrl: imageUrl,
+                    profileImageUrl: profileImageUrl,
+                    likes: 0,
+                    likedUsers: {} // Initialize as an empty object
+                });
+            })
+            .then(() => {
+                document.getElementById('textareaPlaceholder').value = '';
+                document.getElementById('fileInput').value = '';
+                document.getElementById('selectedImage').src = '';
+                document.querySelector('.post-upload-pogress-container').style.display = 'none'; // Hide progress container
+
+                // Play the post upload sound
+                const postSound = document.getElementById('postSound');
+                postSound.play();
             })
             .catch((error) => {
-              console.error('Error fetching profile image:', error);
-              reject(error);
+                console.error('Error creating post: ', error);
             });
-        } else {
-          console.error('No user credentials found in local storage.');
-          resolve(); // Resolve even if no user credentials
-        }
-      });
-    };
-
-    // Save text and user details to Firebase Realtime Database
-    Promise.all([uploadImage(), fetchProfileImage()])
-      .then(() => {
-        return set(dbRef(database, 'All_Post/' + postId), {
-          userId: userId,
-          firstName: userFirstName,
-          lastName: userLastName,
-          text: text,
-          timestamp: postId,
-          uploadTime: uploadTime,
-          imageUrl: imageUrl,
-          profileImageUrl: profileImageUrl,
-        });
-      })
-      .then(() => {
-        document.getElementById('textareaPlaceholder').value = '';
-        document.getElementById('fileInput').value = '';
-        document.getElementById('selectedImage').src = '';
-        document.querySelector('.post-upload-pogress-container').style.display = 'none'; // Hide progress container
-
-        // Play the post upload sound
-        const postSound = document.getElementById('postSound');
-        postSound.play();
-      })
-      .catch((error) => {
-        console.error('Error creating post: ', error);
-      });
-  } else {
-    alert('Please write something or select an image before posting.');
-  }
+    } else {
+        alert('Please write something or select an image before posting.');
+    }
 });
-
 
 // Fetch and display posts when the page loads
 window.addEventListener('load', () => {
@@ -693,6 +695,9 @@ window.addEventListener('load', () => {
                 ? `<img src="${post.profileImageUrl}">`
                 : `<img src="no-profile.png">`;
 
+            // Set the like count text based on the current like count from the database
+            const likeCountText = `${post.likes || 0} Likes`;
+
             postElement.innerHTML = `
                 <div class="post-header_and_post_content">
                     <div class="profile-box">
@@ -714,10 +719,10 @@ window.addEventListener('load', () => {
                 ${imageHTML}
                 <div class="post-activity-container">
                     <div class="post-activity-box">
-                        <div onclick="toggleLike('${postId}')" class="like-box" id="like-box-${postId}">
+                        <div class="like-box" id="like-box-${postId}">
                             <img id="likeGray-${postId}" src="like.png">
                             <img id="likeBlue-${postId}" src="like-blue.png" style="display:none;">
-                            <h4 id="likeText-${postId}">Like</h4>
+                            <h4 id="likeText-${postId}">${likeCountText}</h4> <!-- Show the like count -->
                         </div>
                         <div class="like-box">
                             <img src="comment.png">
@@ -789,6 +794,274 @@ window.addEventListener('load', () => {
             newFeedNotification.style.display = 'none';
             localStorage.setItem('notificationHidden', 'true');
         }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const likeSound = new Audio('like.mp3'); // Preload the like sound
+
+    // Get the user email from local storage
+    const userEmail = JSON.parse(localStorage.getItem('user-creds')).email;
+    const userId = btoa(userEmail); // Encode the email to create a unique user ID
+
+    // Function to handle post likes
+    const handleLike = (postId) => {
+        const likeGray = document.getElementById(`likeGray-${postId}`);
+        const likeBlue = document.getElementById(`likeBlue-${postId}`);
+
+        // Fetch the post from the database
+        const postRef = dbRef(database, 'All_Post/' + postId);
+        get(postRef).then((snapshot) => {
+            if (snapshot.exists()) {
+                const post = snapshot.val();
+                const likedUsers = post.likedUsers || {};
+
+                // Check if the user has already liked this post
+                if (likedUsers[userId]) {
+                    // User already liked this post, so we remove the like
+                    delete likedUsers[userId];
+                    update(dbRef(database, 'All_Post/' + postId), {
+                        likedUsers: likedUsers,
+                        likes: (post.likes || 0) - 1
+                    });
+                    updateLikeDisplay(postId);
+                } else {
+                    // User has not liked this post, so we add the like
+                    likedUsers[userId] = true;
+                    update(dbRef(database, 'All_Post/' + postId), {
+                        likedUsers: likedUsers,
+                        likes: (post.likes || 0) + 1
+                    });
+                    updateLikeDisplay(postId);
+
+                    // Play the like sound
+                    likeSound.play();
+                }
+            }
+        }).catch((error) => {
+            console.error("Error handling like: ", error);
+        });
+    };
+
+    // Function to update like display based on the likedUsers list
+    const updateLikeDisplay = (postId) => {
+        const likeBox = document.getElementById(`like-box-${postId}`);
+        const likeGray = document.getElementById(`likeGray-${postId}`);
+        const likeBlue = document.getElementById(`likeBlue-${postId}`);
+        const likeText = document.getElementById(`likeText-${postId}`);
+
+        // Fetch the post from the database
+        const postRef = dbRef(database, 'All_Post/' + postId);
+        get(postRef).then((snapshot) => {
+            if (snapshot.exists()) {
+                const post = snapshot.val();
+                const likedUsers = post.likedUsers || {};
+
+                if (likedUsers[userId]) {
+                    likeGray.style.display = 'none';
+                    likeBlue.style.display = 'block';
+                } else {
+                    likeGray.style.display = 'block';
+                    likeBlue.style.display = 'none';
+                }
+
+                likeText.textContent = `${post.likes || 0} Likes`;
+            }
+        }).catch((error) => {
+            console.error("Error updating like display: ", error);
+        });
+    };
+
+    // Event listener for like buttons
+    document.addEventListener('click', function (event) {
+        if (event.target.matches('.like-box') || event.target.closest('.like-box')) {
+            const postId = event.target.closest('.like-box').id.split('-')[2];
+            handleLike(postId);
+        }
+    });
+
+    // Fetch and display posts when the page loads
+    window.addEventListener('load', () => {
+        const loadingContainer = document.querySelector('.loading-post-container');
+        loadingContainer.style.display = 'block';
+
+        let initialLoadCompleted = false;
+        const newFeedNotification = document.querySelector('.newFeedNotification');
+
+        // Function to handle new posts
+        const handleNewPost = () => {
+            if (localStorage.getItem('notificationHidden') !== 'true') {
+                newFeedNotification.style.display = 'block';
+            }
+        };
+
+        // Check local storage to hide notification if it was previously hidden
+        if (localStorage.getItem('notificationHidden') === 'true') {
+            newFeedNotification.style.display = 'none';
+        }
+
+        // Function to update post times
+        const updatePostTimes = () => {
+            // Your existing logic to update post times
+        };
+
+        // Function to check if there are no posts
+        const checkNoPosts = () => {
+            const postContainer = document.querySelector('.post-create-container');
+            const posts = postContainer.querySelectorAll('.post');
+            if (posts.length === 0) {
+                loadingContainer.style.display = 'block';
+            }
+        };
+
+        // Listen for new posts and add them to the DOM
+        onChildAdded(dbRef(database, 'All_Post'), (snapshot) => {
+            if (snapshot.exists()) {
+                const post = snapshot.val();
+                const postId = snapshot.key;
+                const postContainer = document.querySelector('.post-create-container');
+
+                if (document.getElementById(`post-${postId}`)) {
+                    return;
+                }
+
+                // Show the new feed notification if the user has not hidden it
+                handleNewPost();
+
+                const postElement = document.createElement('div');
+                postElement.className = 'post';
+                postElement.id = `post-${postId}`;
+
+                const imageHTML = post.imageUrl ? `<div class="post-img"><img src="${post.imageUrl}" class="lazyload" id="databaseImg"></div>` : '';
+                const profileImageHTML = post.profileImageUrl
+                    ? `<img src="${post.profileImageUrl}">`
+                    : `<img src="no-profile.png">`;
+
+                // Set the like count text based on the current like count from the database
+                const likeCountText = `${post.likes || 0} Likes`;
+
+                postElement.innerHTML = `
+                    <div class="post-header_and_post_content">
+                        <div class="profile-box">
+                            <div class="post-profile">
+                                ${profileImageHTML}
+                            </div>
+                        </div>
+                        <div class="post-userName-andtime">
+                            <h4>${post.firstName} ${post.lastName}</h4>
+                            <p class="span" id="post-time-${postId}" data-upload-time="${post.uploadTime}">${formatRelativeTime(post.uploadTime)} <span>•</span><span> <i class='bx bx-world'></i></span></p>
+                        </div>
+                        <div class="post-menu">
+                            <i class='bx bx-dots-vertical-rounded'></i>
+                        </div>
+                    </div>
+                    <div class="post-text">
+                        <p>${post.text.replace(/\n/g, '<br>')}</p>
+                    </div>
+                    ${imageHTML}
+                    <div class="post-activity-container">
+                        <div class="post-activity-box">
+                            <div class="like-box" id="like-box-${postId}">
+                                <img id="likeGray-${postId}" src="like.png">
+                                <img id="likeBlue-${postId}" src="like-blue.png" style="display:none;">
+                                <h4 id="likeText-${postId}">${likeCountText}</h4> <!-- Show the like count -->
+                            </div>
+                            <div class="like-box">
+                                <img src="comment.png">
+                                <h4>Comment</h4>
+                            </div>
+                            <div class="like-box">
+                                <img src="share.png">
+                                <h4>Share</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="post-comment-container">
+                        <div class="comment-profile">
+                            <img class="profile-img">
+                        </div>
+                        <div class="comment-inp-box">
+                            <input type="text" placeholder="Add a comment...">
+                        </div>
+                        <button class="comment-send-button" type="button"><i class='bx bxs-send'></i></button>
+                    </div>`;
+
+                postContainer.insertAdjacentElement('afterend', postElement);
+
+                // Hide the loading container only once, after the first post is added
+                if (!initialLoadCompleted) {
+                    loadingContainer.style.display = 'none';
+                    initialLoadCompleted = true;
+                }
+
+                // Clear notification hidden status when a new post is added
+                localStorage.removeItem('notificationHidden');
+
+                setInterval(updatePostTimes, 60000);
+            }
+        }, (error) => {
+            console.error("Error fetching posts with onChildAdded: ", error);
+        });
+
+        onChildRemoved(dbRef(database, 'All_Post'), (snapshot) => {
+            const postId = snapshot.key;
+
+            const postElement = document.getElementById(`post-${postId}`);
+            if (postElement) {
+                postElement.remove();
+            }
+
+            checkNoPosts();
+        }, (error) => {
+            console.error("Error fetching posts with onChildRemoved: ", error);
+        });
+
+        // Hide notification on click and set localStorage to remember
+        newFeedNotification.addEventListener('click', () => {
+          newFeedNotification.style.display = 'none';
+            localStorage.setItem('notificationHidden', 'true');
+        });
+
+        // Hide notification on homNavM click
+        document.querySelector('#homNavM').addEventListener('click', () => {
+            newFeedNotification.style.display = 'none';
+            localStorage.setItem('notificationHidden', 'true');
+        });
+
+        // Optionally, hide the notification when the user scrolls to the posts section
+        window.addEventListener('scroll', () => {
+            const postContainer = document.querySelector('.post-create-container');
+            const postContainerPosition = postContainer.getBoundingClientRect().top;
+            if (postContainerPosition < window.innerHeight) {
+                newFeedNotification.style.display = 'none';
+                localStorage.setItem('notificationHidden', 'true');
+            }
+        });
+    });
+
+    // Update like counts and display in real-time
+    onValue(dbRef(database, 'All_Post'), (snapshot) => {
+        snapshot.forEach((postSnapshot) => {
+            const post = postSnapshot.val();
+            const postId = postSnapshot.key;
+            const likeText = document.getElementById(`likeText-${postId}`);
+            const likeGray = document.getElementById(`likeGray-${postId}`);
+            const likeBlue = document.getElementById(`likeBlue-${postId}`);
+
+            if (likeText) {
+                likeText.textContent = `${post.likes || 0} Likes`;
+            }
+
+            if (post.likedUsers && post.likedUsers[userId]) {
+                likeGray.style.display = 'none';
+                likeBlue.style.display = 'block';
+            } else {
+                likeGray.style.display = 'block';
+                likeBlue.style.display = 'none';
+            }
+        });
+    }, (error) => {
+        console.error("Error updating like counts: ", error);
     });
 });
 
