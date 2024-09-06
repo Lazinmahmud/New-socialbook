@@ -1,11 +1,15 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Nerko+One&family=Signika:wght@300..700&display=swap');
+
 *{
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'poppins', Sans-Serif;
+  font-family: Sans-Serif;
   text-decoration: none;
   scroll-behavior: smooth;
 }
+
 :root{
   --main-color: #0159FF;
   --text-color: #000;
@@ -490,9 +494,11 @@ nav {
   box-shadow: 0 0 4px rgba(0,0,0,0.4);
 }
 .update-profile-text{
-  font-weight: normal;
   color: #808080;
   font-size: 15px;
+  font-family: "Nerko One", cursive;
+  font-weight: 400;
+  font-style: normal;
 }
 .post-img img{
   max-height: 600px;
@@ -1091,6 +1097,20 @@ nav {
 .post-upload-pogress-container p{
   font-size: 14px;
 }
+.imgUpProgress {
+  width: 30px;
+  height: 30px;
+  border-top-color: transparent;
+  border-radius: 50%;
+  margin-left: auto;
+  animation: rotate 1s linear infinite;
+  transform-origin: center;
+  position: relative;
+}
+
+
+
+
 .menu-page-container{
   width: 100%;
   height: 100vh;
@@ -1269,6 +1289,7 @@ nav{
   background: var(--off-white-color);
 }
 .post-userName-andtime{
+  height: 35px;
   margin-left: 5px;
 }
 .post-header_and_post_content{
@@ -1282,18 +1303,18 @@ nav{
   padding: 5px;
 }
 .post-activity-container{
-  padding-left: 5px;
-  padding-right: 5px;
+  padding-left: 3px;
+  padding-right: 3px;
 }
 .post-activity-box{
-  gap: 12px;
+  gap: 8px;
   border: 0;
-  padding: 8px;
+  padding: 5px;
   
 }
 .like-box{
-  padding: 2rem;
-  background: var(--off-white-color);
+  padding: 1.8rem;
+  background: transparent;
   border-radius: 2rem;
   height: 2.5rem;
 }
@@ -1501,5 +1522,22 @@ nav{
 }
 .edit-profile-popup-header i{
   font-size: 32px;
+}
+.comment-inp-box{
+  width: 100%;
+  height: 2rem;
+  background: transparent;
+  border-radius: 2rem;
+}
+.comment-inp-box input{
+  padding: 0rem;
+  border-radius: 0rem;
+}
+.profileImgCircle{
+  width: 320px;
+  height: 320px;
+}
+.profile-post-img{
+  height: 400px;
 }
 }
