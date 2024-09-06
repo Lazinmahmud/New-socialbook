@@ -55,46 +55,6 @@ function toggleDropdown() {
         dropdownMenu.style.display = 'none';
     }
 }
-
-
-
-
- let likeCounts = {}; // Object to store like counts for each post
-
-function toggleLike(postId) {
-  const likeBox = document.getElementById(`like-box-${postId}`);
-  const likeGray = document.getElementById(`likeGray-${postId}`);
-  const likeBlue = document.getElementById(`likeBlue-${postId}`);
-  const likeText = document.getElementById(`likeText-${postId}`);
-
-  // Initialize like count if not already set
-  if (!likeCounts[postId]) {
-    likeCounts[postId] = 0;
-  }
-
-  if (likeBlue.style.display === 'none') {
-    // User likes the post
-    likeBlue.style.display = 'block';
-    likeGray.style.display = 'none';
-    likeCounts[postId]++;
-  } else {
-    // User unlikes the post
-    likeBlue.style.display = 'none';
-    likeGray.style.display = 'block';
-    likeCounts[postId] = Math.max(likeCounts[postId] - 1, 0); // Ensure count doesn't go below 0
-  }
-
-  // Update like text
-  likeText.textContent = likeCounts[postId] === 0 ? 'Like' : likeCounts[postId];
-
-
-}
-
-
-
-
-
-
 // post image select and img display 
 const fileInput = document.getElementById('fileInput');
     const selectedImage = document.getElementById('selectedImage');
