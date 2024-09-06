@@ -43,7 +43,12 @@
   </div>
   
   
-  
+  <div class="loging-preloader-bg">
+    <div class="loading-box">
+      <div class="loading-preloader"></div>
+      <p class="loading-txt">Please wait...</p>
+    </div>
+  </div>
   
   
   
@@ -103,6 +108,9 @@ let SignInUser = evt => {
 
   if (!isValid) return;
 
+  // Display preloader
+  document.querySelector('.loging-preloader-bg').style.display = 'flex'
+
   // Sign in with Firebase
   signInWithEmailAndPassword(auth, EmailInp.value, PassInp.value)
     .then((credentials) => {
@@ -113,7 +121,10 @@ let SignInUser = evt => {
             lastName: snapshot.val().lastName
           }));
           localStorage.setItem("user-creds", JSON.stringify(credentials.user));
-          window.location.href = 'home.html';
+          // Wait for the preloader to be displayed before redirecting
+          setTimeout(() => {
+            window.location.href = 'home.html';
+          }, 100); // Adjust timeout if needed
         }
       });
     })
@@ -121,6 +132,8 @@ let SignInUser = evt => {
       document.getElementById('passwordError').textContent = error.message;
       console.log(error.code);
       console.log(error.message);
+      // Hide preloader if there's an error
+      document.querySelector('.loging-preloader-bg').style.display = 'none'
     });
 };
 
