@@ -171,7 +171,7 @@
     
     <audio id="postSound" src="post-sound.mp3" preload="auto"></audio>
     
-<!--<div class="post ">
+<!----<div class="post ">
       <div class="post-header_and_post_content">
         <div class="profile-box ">
           <div class="post-profile">
@@ -190,7 +190,20 @@
        <p>hello world welcome to socialbook and this is a social media platform in the world</p>
    </div>
  <div class="post-img ">
-  <img src="post.jpg" id="databaseImg">
+  <img src="profile.jpg" id="databaseImg">
+    </div>
+    <div class="activity-content-box">
+      <div class="like-content" >
+        <img class="like-round-icon" src="like-round.png">
+      <h4>1</h4>
+      </div>
+        <div class="comment-content">
+          <h4>0 Comment</h4>
+        </div>
+        <span class="dots">•</span>
+        <div class="share-content">
+          <h4>0 Share</h4>
+        </div>
     </div>
       <div class="post-activity-container">
        <div class="post-activity-box ">
@@ -235,7 +248,7 @@
            <button class="comment-send-button" type="button"><i class='bx bxs-send' ></i></button>
          </div>
                
-      </div>--->
+      </div>----->
       
     <!---- <div class="post ">
       <div class="post-header_and_post_content">
@@ -696,7 +709,7 @@ window.addEventListener('load', () => {
                 : `<img src="no-profile.png">`;
 
             // Set the like count text based on the current like count from the database
-            const likeCountText = `${post.likes || 0} Likes`;
+            const likeCountText = `${post.likes || 0} `;
 
             postElement.innerHTML = `
                 <div class="post-header_and_post_content">
@@ -717,12 +730,25 @@ window.addEventListener('load', () => {
                     <p>${post.text.replace(/\n/g, '<br>')}</p>
                 </div>
                 ${imageHTML}
+                <div class="activity-content-box">
+      <div class="like-content" >
+        <img class="like-round-icon" src="like-round.png">
+      <h4 id="likeCount-${postId}">${likeCountText}</h4>
+      </div>
+      <div class="comment-content">
+          <p>0 Comment</p>
+        </div>
+        <span class="dots">.</span>
+        <div class="share-content">
+          <p>0 Share</p>
+        </div>
+    </div>
                 <div class="post-activity-container">
                     <div class="post-activity-box">
                         <div class="like-box" id="like-box-${postId}">
                             <img id="likeGray-${postId}" src="like.png">
                             <img id="likeBlue-${postId}" src="like-blue.png" style="display:none;">
-                            <h4 id="likeText-${postId}">${likeCountText}</h4> <!-- Show the like count -->
+                            <h4 id="likeText">Like</h4>
                         </div>
                         <div class="like-box">
                             <img src="comment.png">
@@ -802,10 +828,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Get the user email from local storage
     const userEmail = JSON.parse(localStorage.getItem('user-creds')).email;
-    const userId = btoa(userEmail); // Encode the email to create a unique user ID
+    const userId = btoa(userEmail);
 
-    // Function to handle post likes
-    const handleLike = (postId) => {
+
+ const handleLike = (postId) => {
         const likeGray = document.getElementById(`likeGray-${postId}`);
         const likeBlue = document.getElementById(`likeBlue-${postId}`);
 
@@ -816,9 +842,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const post = snapshot.val();
                 const likedUsers = post.likedUsers || {};
 
-                // Check if the user has already liked this post
+                
                 if (likedUsers[userId]) {
-                    // User already liked this post, so we remove the like
+                   
                     delete likedUsers[userId];
                     update(dbRef(database, 'All_Post/' + postId), {
                         likedUsers: likedUsers,
@@ -843,20 +869,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Function to update like display based on the likedUsers list
-    const updateLikeDisplay = (postId) => {
-        const likeBox = document.getElementById(`like-box-${postId}`);
-        const likeGray = document.getElementById(`likeGray-${postId}`);
-        const likeBlue = document.getElementById(`likeBlue-${postId}`);
-        const likeText = document.getElementById(`likeText-${postId}`);
 
-        // Fetch the post from the database
-        const postRef = dbRef(database, 'All_Post/' + postId);
-        get(postRef).then((snapshot) => {
+// Function to update the like display
+const updateLikeDisplay = (postId) => {
+    const likeCountElement = document.getElementById(`likeCount-${postId}`); // Target like count inside .like-content
+    const likeGray = document.getElementById(`likeGray-${postId}`);
+    const likeBlue = document.getElementById(`likeBlue-${postId}`);
+    const likeContentBox = document.querySelector(`#post-${postId} .like-content`);
+
+    // Fetch the post from the database
+    const postRef = dbRef(database, 'All_Post/' + postId);
+    get(postRef)
+        .then((snapshot) => {
             if (snapshot.exists()) {
                 const post = snapshot.val();
                 const likedUsers = post.likedUsers || {};
 
+                // Toggle like button display
                 if (likedUsers[userId]) {
                     likeGray.style.display = 'none';
                     likeBlue.style.display = 'block';
@@ -865,12 +894,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     likeBlue.style.display = 'none';
                 }
 
-                likeText.textContent = `${post.likes || 0} Likes`;
+                // Update like count only inside .like-content
+                if (likeCountElement) {
+                    likeCountElement.textContent = `${post.likes || 0} `;
+                }
+
+                // Update like-content-box display based on like count
+                if (likeContentBox) {
+                    if (post.likes > 0) {
+                        likeContentBox.style.display = 'flex';
+                    } else {
+                        likeContentBox.style.display = 'none';
+                    }
+                }
             }
-        }).catch((error) => {
-            console.error("Error updating like display: ", error);
+        })
+        .catch((error) => {
+            console.error('Error updating like display: ', error);
         });
-    };
+};
 
     // Event listener for like buttons
     document.addEventListener('click', function (event) {
@@ -879,6 +921,24 @@ document.addEventListener('DOMContentLoaded', () => {
             handleLike(postId);
         }
     });
+
+
+
+
+// Listen for changes in the likes count in real-time and update the UI
+onValue(dbRef(database, 'All_Post'), (snapshot) => {
+    snapshot.forEach((postSnapshot) => {
+        const post = postSnapshot.val();
+        const postId = postSnapshot.key;
+        
+        // Update the like display
+        updateLikeDisplay(postId);
+    });
+}, (error) => {
+    console.error("Error updating like counts in real-time: ", error);
+});
+
+
 
     // Fetch and display posts when the page loads
     window.addEventListener('load', () => {
@@ -938,7 +998,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     : `<img src="no-profile.png">`;
 
                 // Set the like count text based on the current like count from the database
-                const likeCountText = `${post.likes || 0} Likes`;
+                const likeCountText = `${post.likes || 0} `;
 
                 postElement.innerHTML = `
                     <div class="post-header_and_post_content">
@@ -1039,30 +1099,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Update like counts and display in real-time
-    onValue(dbRef(database, 'All_Post'), (snapshot) => {
-        snapshot.forEach((postSnapshot) => {
-            const post = postSnapshot.val();
-            const postId = postSnapshot.key;
-            const likeText = document.getElementById(`likeText-${postId}`);
-            const likeGray = document.getElementById(`likeGray-${postId}`);
-            const likeBlue = document.getElementById(`likeBlue-${postId}`);
 
-            if (likeText) {
-                likeText.textContent = `${post.likes || 0} Likes`;
-            }
-
-            if (post.likedUsers && post.likedUsers[userId]) {
-                likeGray.style.display = 'none';
-                likeBlue.style.display = 'block';
-            } else {
-                likeGray.style.display = 'block';
-                likeBlue.style.display = 'none';
-            }
-        });
-    }, (error) => {
-        console.error("Error updating like counts: ", error);
-    });
 });
 
 
