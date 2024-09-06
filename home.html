@@ -7,7 +7,6 @@
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <link rel="stylesheet" href="home.css">
   <title>home</title>
-  
 </head>
 <body>
   
@@ -163,15 +162,16 @@
     
     
     
-    <!---
-    <div class="post-upload-pogress-container">
+    
+    <!---<div class="post-upload-pogress-container">
       <img src="post.jpg">
       <p>Posting...</p>
+      <span class="imgUpProgress"></span>
     </div>--->
     
     <audio id="postSound" src="post-sound.mp3" preload="auto"></audio>
     
-<!--- <div class="post ">
+<!--<div class="post ">
       <div class="post-header_and_post_content">
         <div class="profile-box ">
           <div class="post-profile">
@@ -237,16 +237,16 @@
                
       </div>--->
       
-     <!----<div class="post ">
+    <!---- <div class="post ">
       <div class="post-header_and_post_content">
               <div class="profile-box ">
                 <div class="post-profile">
-                   ${profileImageHTML}
+                   <img src="no-profile.png">
                 </div>
               </div>
               <div class="post-userName-andtime">
-                <h4>${post.firstName} ${post.lastName} <span class="update-profile-text">Update his profile picture.</span></h4>
-                <p class="span" id="post-time-${postId}">${formatRelativeTime(post.uploadTime)} <span>•</span><span> <i class='bx bx-world'></i></span></p>
+                <h4>Lazim Mahmud <span class="update-profile-text">Update his profile picture.</span></h4>
+                <p class="span" id="post-time-${postId}">1m ago <span>•</span><span> <i class='bx bx-world'></i></span></p>
               </div>
               <div class="post-menu">
                 <i class='bx bx-dots-vertical-rounded'></i>
@@ -254,7 +254,7 @@
             </div>
        <div class="profile-post-img ">
           <div class="profileImgCircle">
-           <img src="post.jpg" id="databaseImg">
+           <img src="profile.jpg" id="databaseImg">
         </div>
       </div>
       <div class="post-activity-container">
@@ -275,7 +275,7 @@
              </div>
                </div>
                
-      </div>------>
+      </div>----->
       
               
         
@@ -488,126 +488,151 @@
 });
   
   document.getElementById('uploadBtn').addEventListener('click', function () {
-    const text = document.getElementById('textareaPlaceholder').value;
-    const fileInput = document.getElementById('fileInput');
-    const file = fileInput.files[0];
+  const text = document.getElementById('textareaPlaceholder').value;
+  const fileInput = document.getElementById('fileInput');
+  const file = fileInput.files[0];
 
-    if (text || file) {
-        setTimeout(function () {
-            const popupOpachityElement = document.querySelector('.popup-opachity');
-            if (popupOpachityElement) {
-                popupOpachityElement.style.display = 'none';
-                document.querySelector('.mobail-nav').style.zIndex = '1';
-            }
-        }, 10);
+  if (text || file) {
+    setTimeout(function () {
+      const popupOpachityElement = document.querySelector('.popup-opachity');
+      if (popupOpachityElement) {
+        popupOpachityElement.style.display = 'none';
+        document.querySelector('.mobail-nav').style.zIndex = '1';
+      }
+    }, 10);
 
-        const userId = 'user123';  // Replace with actual user ID
-        const userFirstName = UserInfo.firstName;
-        const userLastName = UserInfo.lastName;
-        const postId = new Date().getTime(); // Unique post ID based on timestamp
-        const uploadTime = new Date().toISOString(); // Save current time
+    const userId = 'user123'; // Replace with actual user ID
+    const userFirstName = UserInfo.firstName;
+    const userLastName = UserInfo.lastName;
+    const postId = new Date().getTime(); // Unique post ID based on timestamp
+    const uploadTime = new Date().toISOString(); // Save current time
 
-        let imageUrl = '';
-        let profileImageUrl = '';
+    let imageUrl = '';
+    let profileImageUrl = '';
 
-        // Create the post upload progress container
-        const progressContainer = document.createElement('div');
-        progressContainer.className = 'post-upload-pogress-container';
-        const progressImage = document.createElement('img');
-        const progressText = document.createElement('p');
-        progressText.textContent = 'Posting...';
+    // Create the post upload progress container
+    const progressContainer = document.createElement('div');
+    progressContainer.className = 'post-upload-pogress-container';
+    const progressImage = document.createElement('img');
+    const progressText = document.createElement('p');
+    progressText.textContent = 'Posting...';
 
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                progressImage.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        } else {
-            progressImage.src = '';
-        }
-
-        progressContainer.appendChild(progressImage);
-        progressContainer.appendChild(progressText);
-        const postCreateContainer = document.querySelector('.post-create-container');
-        postCreateContainer.insertAdjacentElement('afterend', progressContainer);
-
-        // Function to handle image upload
-        const uploadImage = () => {
-            return new Promise((resolve, reject) => {
-                if (file) {
-                    const storageRef = ref(storage, 'images/' + postId + '-' + file.name);
-                    uploadBytes(storageRef, file).then(snapshot => {
-                        getDownloadURL(snapshot.ref).then(url => {
-                            imageUrl = url;
-                            resolve();
-                        }).catch(reject);
-                    }).catch(reject);
-                } else {
-                    resolve();
-                }
-            });
-        };
-
-        // Fetch profile image from Firebase Realtime Database
-        const fetchProfileImage = () => {
-            return new Promise((resolve, reject) => {
-                let UserCreds = JSON.parse(localStorage.getItem("user-creds"));
-                if (UserCreds && UserCreds.email) {
-                    const email = UserCreds.email;
-                    const formattedEmail = email.replace('.', ','); // Format email for database key
-                    const userProfileDetailsRef = dbRef(database, 'User_Profile_details/' + formattedEmail);
-
-                    get(userProfileDetailsRef).then(snapshot => {
-                        if (snapshot.exists()) {
-                            const data = snapshot.val();
-                            if (data.profileImageURL) {
-                                profileImageUrl = data.profileImageURL;
-                            }
-                            resolve();
-                        } else {
-                            console.log('No profile details found for this user.');
-                            resolve(); // Resolve even if no data found
-                        }
-                    }).catch(error => {
-                        console.error('Error fetching profile image:', error);
-                        reject(error);
-                    });
-                } else {
-                    console.error('No user credentials found in local storage.');
-                    resolve(); // Resolve even if no user credentials
-                }
-            });
-        };
-
-        // Save text and user details to Firebase Realtime Database
-        Promise.all([uploadImage(), fetchProfileImage()]).then(() => {
-            return set(dbRef(database, 'All_Post/' + postId), {
-                userId: userId,
-                firstName: userFirstName,
-                lastName: userLastName,
-                text: text,
-                timestamp: postId,
-                uploadTime: uploadTime,
-                imageUrl: imageUrl,
-                profileImageUrl: profileImageUrl
-            });
-        }).then(() => {
-            document.getElementById('textareaPlaceholder').value = '';
-            document.getElementById('fileInput').value = '';
-            document.getElementById('selectedImage').src = '';
-            document.querySelector('.post-upload-pogress-container').style.display = 'none'; // Hide progress container
-
-            // Play the post upload sound
-            const postSound = document.getElementById('postSound');
-            postSound.play();
-        }).catch(error => {
-            console.error("Error creating post: ", error);
-        });
-
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        progressImage.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
     } else {
-        alert("Please write something or select an image before posting.");
+      progressImage.src = '';
     }
+
+    const progressBar = document.createElement('span');
+    progressBar.className = 'imgUpProgress';
+
+    progressContainer.appendChild(progressImage);
+    progressContainer.appendChild(progressText);
+    progressContainer.appendChild(progressBar);
+    const postCreateContainer = document.querySelector('.post-create-container');
+    postCreateContainer.insertAdjacentElement('afterend', progressContainer);
+
+    // Function to simulate progress
+    let progress = 0;
+    const simulateProgress = setInterval(() => {
+      if (progress < 100) {
+        progress += 5; // Increment progress (adjust speed here)
+        progressBar.style.background = `conic-gradient(var(--main-color) ${progress}%, transparent 0)`; // Simulate the fill
+      } else {
+        clearInterval(simulateProgress); // Stop progress animation when complete
+      }
+    }, 200); // Speed of the progress increment
+
+    // Function to handle image upload
+    const uploadImage = () => {
+      return new Promise((resolve, reject) => {
+        if (file) {
+          const storageRef = ref(storage, 'images/' + postId + '-' + file.name);
+          uploadBytes(storageRef, file)
+            .then((snapshot) => {
+              getDownloadURL(snapshot.ref)
+                .then((url) => {
+                  imageUrl = url;
+                  clearInterval(simulateProgress); // Stop progress when upload is complete
+                  progressBar.style.background = `conic-gradient(var(--main-color) 100%, transparent 0)`; // Complete progress fill
+                  resolve();
+                })
+                .catch(reject);
+            })
+            .catch(reject);
+        } else {
+          resolve();
+        }
+      });
+    };
+
+    // Fetch profile image from Firebase Realtime Database
+    const fetchProfileImage = () => {
+      return new Promise((resolve, reject) => {
+        let UserCreds = JSON.parse(localStorage.getItem('user-creds'));
+        if (UserCreds && UserCreds.email) {
+          const email = UserCreds.email;
+          const formattedEmail = email.replace('.', ','); // Format email for database key
+          const userProfileDetailsRef = dbRef(database, 'User_Profile_details/' + formattedEmail);
+
+          get(userProfileDetailsRef)
+            .then((snapshot) => {
+              if (snapshot.exists()) {
+                const data = snapshot.val();
+                if (data.profileImageURL) {
+                  profileImageUrl = data.profileImageURL;
+                }
+                resolve();
+              } else {
+                console.log('No profile details found for this user.');
+                resolve(); // Resolve even if no data found
+              }
+            })
+            .catch((error) => {
+              console.error('Error fetching profile image:', error);
+              reject(error);
+            });
+        } else {
+          console.error('No user credentials found in local storage.');
+          resolve(); // Resolve even if no user credentials
+        }
+      });
+    };
+
+    // Save text and user details to Firebase Realtime Database
+    Promise.all([uploadImage(), fetchProfileImage()])
+      .then(() => {
+        return set(dbRef(database, 'All_Post/' + postId), {
+          userId: userId,
+          firstName: userFirstName,
+          lastName: userLastName,
+          text: text,
+          timestamp: postId,
+          uploadTime: uploadTime,
+          imageUrl: imageUrl,
+          profileImageUrl: profileImageUrl,
+        });
+      })
+      .then(() => {
+        document.getElementById('textareaPlaceholder').value = '';
+        document.getElementById('fileInput').value = '';
+        document.getElementById('selectedImage').src = '';
+        document.querySelector('.post-upload-pogress-container').style.display = 'none'; // Hide progress container
+
+        // Play the post upload sound
+        const postSound = document.getElementById('postSound');
+        postSound.play();
+      })
+      .catch((error) => {
+        console.error('Error creating post: ', error);
+      });
+  } else {
+    alert('Please write something or select an image before posting.');
+  }
 });
 
 
@@ -617,7 +642,6 @@ window.addEventListener('load', () => {
     loadingContainer.style.display = 'block';
 
     let initialLoadCompleted = false;
-    let postsCount = 0;
     const newFeedNotification = document.querySelector('.newFeedNotification');
 
     // Function to handle new posts
@@ -631,6 +655,20 @@ window.addEventListener('load', () => {
     if (localStorage.getItem('notificationHidden') === 'true') {
         newFeedNotification.style.display = 'none';
     }
+
+    // Function to update post times
+    const updatePostTimes = () => {
+        // Your existing logic to update post times
+    };
+
+    // Function to check if there are no posts
+    const checkNoPosts = () => {
+        const postContainer = document.querySelector('.post-create-container');
+        const posts = postContainer.querySelectorAll('.post');
+        if (posts.length === 0) {
+            loadingContainer.style.display = 'block';
+        }
+    };
 
     // Listen for new posts and add them to the DOM
     onChildAdded(dbRef(database, 'All_Post'), (snapshot) => {
@@ -696,21 +734,18 @@ window.addEventListener('load', () => {
                         <img class="profile-img">
                     </div>
                     <div class="comment-inp-box">
-                        <input type="text" placeholder="Write a public comment...">
+                        <input type="text" placeholder="Add a comment...">
                     </div>
                     <button class="comment-send-button" type="button"><i class='bx bxs-send'></i></button>
                 </div>`;
 
             postContainer.insertAdjacentElement('afterend', postElement);
 
-            document.querySelector('.post-upload-pogress-container').style.display = 'none';
-
+            // Hide the loading container only once, after the first post is added
             if (!initialLoadCompleted) {
                 loadingContainer.style.display = 'none';
                 initialLoadCompleted = true;
             }
-
-            postsCount += 1;
 
             // Clear notification hidden status when a new post is added
             localStorage.removeItem('notificationHidden');
@@ -728,8 +763,6 @@ window.addEventListener('load', () => {
         if (postElement) {
             postElement.remove();
         }
-
-        postsCount -= 1;
 
         checkNoPosts();
     }, (error) => {
