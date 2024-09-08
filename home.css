@@ -9,6 +9,9 @@
   text-decoration: none;
   scroll-behavior: smooth;
 }
+a{
+  cursor: default;
+}
 
 :root{
   --main-color: #0159FF;
@@ -64,7 +67,19 @@ body{
   align-items: center ;
   padding: 10px;
 }
-.nav-top img{
+.search-and-udow-box{
+  margin-left: auto;
+  display: flex;
+  align-items: center ;
+  gap: 1.4rem;
+}
+.search-and-udow-box img{
+  width: 1.8rem;
+}
+.search-and-udow-box img:active{
+  opacity: 0.60;
+}
+.navLogo img{
   width: 140px;
 }
 .nav-bottom{
@@ -400,7 +415,7 @@ nav {
 .post{
   width: 100%;
   background: var(--post-bg-color);
-  padding-bottom: 1rem;
+  padding-bottom: 0rem;
   border-radius: 10px;
   box-shadow: 0 4px 5px rgba(0,0,0,0.1);
   margin-bottom: 20px;
@@ -510,27 +525,55 @@ nav {
   width: 100%;
   padding-left: 1rem;
   padding-right: 1rem;
+  height: 3.2rem;
 }
 .post-activity-box{
   padding: 5px;
   width: 100%;
+  height: 100%;
   display: flex ;
   align-items: center ;
   justify-content: space-between ;
   border-top: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
 }
+
+
+.reaction-container{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px;
+  width: 265px;
+  position: absolute;
+  margin-top: -2.9rem;
+  background: var(--post-bg-color);
+  border-radius: 2rem;
+  box-shadow: 0 0 3px rgba(0,0,0,0.4);
+  margin-left: 1rem;
+  opacity: 0;
+  transform: scale(0.8);
+}
+.reaction-container img{
+  width: 40px;
+}
+
+
+
+
+
+
+
 .activity-content-box{
   width: 100%;
   display: flex;
   align-items: center;
   padding-left: 0.8rem;
   margin-top: 0.7rem;
-  height: 1.2rem;
+  height: 1.5rem;
   margin-bottom: 3px;
 }
 .like-content{
-  display: flex;
+  display: none;
   align-items: center;
   padding: 1px;
   border-radius: 3px;
@@ -544,27 +587,15 @@ nav {
 .comment-content p{
   font-size: 12px;
   color: var(--gray-text-color);
-  font-weight: 420;
-}
-.dots{
-  margin-left: 7px;
-  margin-right: 5px;
-  color: var(--gray-text-color);
-  margin-top: -10px;
-}
-.share-content{
-  margin-right: 1rem;
-}
-.share-content p{
-  font-size: 12px;
-  color: var(--gray-text-color);
-  font-weight: 420;
+  font-weight: normal;
+  font-family: "Outfit", sans-serif;
+  margin-right: 10px;
 }
 .activity-content-box h4{
   font-size: 12px;
   margin-left: 4px;
   color: var(--gray-text-color);
-  font-weight: 420;
+  font-weight: 400;
 }
 .like-round-icon{
   width: 20px;
@@ -576,6 +607,7 @@ nav {
   justify-content: center;
   gap: 6px;
   border-radius: 5px;
+  height: 100%;
 }
 .like-box:active{
   background: var(--off-white-color);
@@ -1350,20 +1382,20 @@ nav{
   padding: 5px;
 }
 .post-activity-container{
+  height: 3.5rem;
   padding-left: 0px;
   padding-right: 0px;
 }
 .post-activity-box{
   gap: 8px;
   border: 0;
-  padding: 5px;
-  
+  padding: 8px;
+  height: 100%;
 }
 .like-box{
-  padding: 1.8rem;
-  background: transparent;
+  height: 100%;
+  background: var(--off-white-color);
   border-radius: 2rem;
-  
 }
 .like-box img{
   width: 23px;
@@ -1586,5 +1618,15 @@ nav{
 }
 .profile-post-img{
   height: 400px;
+}
+.like-round-icon{
+  width: 17px;
+}
+.reaction-container{
+  width: 280px;
+}
+.activity-content-box{
+  margin-top: 0.5rem;
+  height: 1.2rem;
 }
 }
