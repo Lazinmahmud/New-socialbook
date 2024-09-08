@@ -49,7 +49,15 @@
   
   <div class="mobail-nav">
     <div class="nav-top">
-      <img src="logo-blue.png">
+      <div class="navLogo">
+        <img src="logo-blue.png">
+      </div>
+      <div class="search-and-udow-box">
+        <img src="search.png" class="searchImg">
+        <a href="#">
+          <img src="udow.png" class="udowImg">
+        </a>
+      </div>
     </div>
     <div class="nav-bottom">
       
@@ -171,7 +179,7 @@
     
     <audio id="postSound" src="post-sound.mp3" preload="auto"></audio>
     
-<!----<div class="post ">
+<!-----<div class="post ">
       <div class="post-header_and_post_content">
         <div class="profile-box ">
           <div class="post-profile">
@@ -205,9 +213,23 @@
           <h4>0 Share</h4>
         </div>
     </div>
+    
+    
+    <div class="reaction-container" style="visibility: hidden; opacity: 0; transform: scale(0.8); transition: opacity 0.3s, transform 0.3s;">
+      <img src="like-round.png">
+      <img src="love.png">
+      <img src="haha.png">
+      <img src="wow.png">
+      <img src="sad.png">
+      <img src="angry.png">
+    </div>
+    
+    
+    
+    
       <div class="post-activity-container">
        <div class="post-activity-box ">
-         <div onclick="toggleLike()" class="like-box ">
+         <div id="likeBox" class="like-box ">
             <img id="likeGray" src="like.png">
               <img id="likeBlue" src="like-blue.png">
              <h4 id="likeText">Like</h4>
@@ -248,7 +270,7 @@
            <button class="comment-send-button" type="button"><i class='bx bxs-send' ></i></button>
          </div>
                
-      </div>----->
+      </div>---->
       
     <!---- <div class="post ">
       <div class="post-header_and_post_content">
@@ -561,28 +583,76 @@ document.getElementById('uploadBtn').addEventListener('click', function () {
             }
         }, 200); // Speed of the progress increment
 
-        // Function to handle image upload
-        const uploadImage = () => {
-            return new Promise((resolve, reject) => {
-                if (file) {
-                    const storageRef = ref(storage, 'images/' + postId + '-' + file.name);
-                    uploadBytes(storageRef, file)
+        // Function to compress image
+        function compressImage(file, quality = 0.8, maxWidth = 1920, maxHeight = 1080) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                let width = img.width;
+                let height = img.height;
+
+                // প্রস্থ এবং উচ্চতার সীমা নির্ধারণ (সামান্য রেজুলেশন কমাতে)
+                if (width > maxWidth || height > maxHeight) {
+                    if (width > height) {
+                        height = Math.round((height * maxWidth) / width);
+                        width = maxWidth;
+                    } else {
+                        width = Math.round((width * maxHeight) / height);
+                        height = maxHeight;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(img, 0, 0, width, height);
+
+                canvas.toBlob(
+                    (blob) => {
+                        resolve(new File([blob], file.name, { type: file.type }));
+                    },
+                    file.type,
+                    quality // কমপ্রেশন মান (0.8 = ৮০% মান বজায়)
+                );
+            };
+            img.onerror = reject;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+// আপলোড ইমেজ হ্যান্ডলারে কমপ্রেশন ফাংশন কল করুন
+const uploadImage = () => {
+    return new Promise((resolve, reject) => {
+        if (file) {
+            compressImage(file, 0.9) // এখানে ০.৯ কমপ্রেশন মান ব্যবহার করা হয়েছে (অল্প কমপ্রেসড)
+                .then((compressedFile) => {
+                    const storageRef = ref(storage, 'images/' + postId + '-' + compressedFile.name);
+                    uploadBytes(storageRef, compressedFile)
                         .then((snapshot) => {
                             getDownloadURL(snapshot.ref)
                                 .then((url) => {
                                     imageUrl = url;
-                                    clearInterval(simulateProgress); // Stop progress when upload is complete
-                                    progressBar.style.background = `conic-gradient(var(--main-color) 100%, transparent 0)`; // Complete progress fill
+                                    clearInterval(simulateProgress); // আপলোড শেষ হলে প্রোগ্রেস বার বন্ধ করুন
+                                    progressBar.style.background = `conic-gradient(var(--main-color) 100%, transparent 0)`; // প্রোগ্রেস পূর্ণ
                                     resolve();
                                 })
                                 .catch(reject);
                         })
                         .catch(reject);
-                } else {
-                    resolve();
-                }
-            });
-        };
+                })
+                .catch(reject);
+        } else {
+            resolve();
+        }
+    });
+};
 
         // Fetch profile image from Firebase Realtime Database
         const fetchProfileImage = () => {
@@ -703,7 +773,8 @@ window.addEventListener('load', () => {
             postElement.className = 'post';
             postElement.id = `post-${postId}`;
 
-            const imageHTML = post.imageUrl ? `<div class="post-img"><img src="${post.imageUrl}" class="lazyload" id="databaseImg"></div>` : '';
+            const imageHTML = post.imageUrl ? `<div class="post-img"><img src="${post.imageUrl}"
+            class="lazyload" id="databaseImg"></div>` : '';
             const profileImageHTML = post.profileImageUrl
                 ? `<img src="${post.profileImageUrl}">`
                 : `<img src="no-profile.png">`;
@@ -731,18 +802,15 @@ window.addEventListener('load', () => {
                 </div>
                 ${imageHTML}
                 <div class="activity-content-box">
-      <div class="like-content" >
-        <img class="like-round-icon" src="like-round.png">
-      <h4 id="likeCount-${postId}">${likeCountText}</h4>
-      </div>
-      <div class="comment-content">
-          <p>0 Comment</p>
-        </div>
-        <span class="dots">.</span>
-        <div class="share-content">
-          <p>0 Share</p>
-        </div>
-    </div>
+                    <div class="like-content">
+                        <img class="like-round-icon" src="like-round.png">
+                        <h4 id="likeCount-${postId}">${likeCountText}</h4>
+                    </div>
+                    <div class="comment-content">
+                        <p>0 Comment</p>
+                    </div>
+                    
+                </div>
                 <div class="post-activity-container">
                     <div class="post-activity-box">
                         <div class="like-box" id="like-box-${postId}">
@@ -760,15 +828,7 @@ window.addEventListener('load', () => {
                         </div>
                     </div>
                 </div>
-                <div class="post-comment-container">
-                    <div class="comment-profile">
-                        <img class="profile-img">
-                    </div>
-                    <div class="comment-inp-box">
-                        <input type="text" placeholder="Add a comment...">
-                    </div>
-                    <button class="comment-send-button" type="button"><i class='bx bxs-send'></i></button>
-                </div>`;
+                `;
 
             postContainer.insertAdjacentElement('afterend', postElement);
 
