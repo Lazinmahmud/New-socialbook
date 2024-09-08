@@ -1,47 +1,38 @@
 
-window.onload = function() {
-            const currentDate = new Date();
-            const currentDay = currentDate.getDate();
-            const currentMonth = currentDate.getMonth(); // 0-indexed
-            const currentYear = currentDate.getFullYear();
+document.addEventListener('DOMContentLoaded', () => {
+  const daySelect = document.getElementById('day');
+  const monthSelect = document.getElementById('month');
+  const yearSelect = document.getElementById('year');
 
-            // Populate days
-            const daySelect = document.getElementById('day');
-            for (let day = 1; day <= 31; day++) {
-                const option = document.createElement('option');
-                option.value = day;
-                option.textContent = day;
-                if (day === currentDay) {
-                    option.selected = true;
-                }
-                daySelect.appendChild(option);
-            }
+  // Populate day options
+  for (let i = 1; i <= 31; i++) {
+    const option = document.createElement('option');
+    option.value = i;
+    option.textContent = i;
+    daySelect.appendChild(option);
+  }
 
-            // Populate months
-            const monthSelect = document.getElementById('month');
-            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-            months.forEach((month, index) => {
-                const option = document.createElement('option');
-                option.value = index;
-                option.textContent = month;
-                if (index === currentMonth) {
-                    option.selected = true;
-                }
-                monthSelect.appendChild(option);
-            });
+  // Populate month options
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  months.forEach((month, index) => {
+    const option = document.createElement('option');
+    option.value = index + 1;
+    option.textContent = month;
+    monthSelect.appendChild(option);
+  });
 
-            // Populate years from current year to 1900
-            const yearSelect = document.getElementById('year');
-            for (let year = currentYear; year >= 1900; year--) {
-                const option = document.createElement('option');
-                option.value = year;
-                option.textContent = year;
-                if (year === currentYear) {
-                    option.selected = true;
-                }
-                yearSelect.appendChild(option);
-            }
-        };
+  // Populate year options (1900 - current year)
+  const currentYear = new Date().getFullYear();
+  for (let i = currentYear; i >= 1900; i--) {
+    const option = document.createElement('option');
+    option.value = i;
+    option.textContent = i;
+    yearSelect.appendChild(option);
+  }
+});
         
         
         
@@ -375,3 +366,32 @@ document.querySelectorAll('img').forEach((img) => {
     console.log('Image clicked!');
   });
 });
+
+
+const likeBox = document.getElementById('likeBox');
+  const reactionContainer = document.querySelector('.reaction-container');
+  let holdTimer;
+
+  // স্পর্শ ইভেন্ট শুরু হলে
+  likeBox.addEventListener('touchstart', () => {
+    holdTimer = setTimeout(() => {
+      reactionContainer.style.visibility = 'visible';
+      reactionContainer.style.opacity = '1';
+      reactionContainer.style.transform = 'scale(1)';
+    }, 300); // ১ সেকেন্ড
+  });
+
+  // স্পর্শ ইভেন্ট শেষ হলে
+  likeBox.addEventListener('touchend', () => {
+    clearTimeout(holdTimer);
+  });
+
+  // স্পর্শ বাতিল হলে
+  likeBox.addEventListener('touchcancel', () => {
+    clearTimeout(holdTimer);
+  });
+  
+  
+  reactionContainer.addEventListener('click', function(){
+    reactionContainer.style.visibility ='hidden'
+  })
