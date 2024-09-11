@@ -4,11 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="">
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <link rel="stylesheet" href="home.css">
   <title>home</title>
 </head>
-<body>
+<body >
   
   
   <nav>
@@ -55,7 +56,7 @@
       <div class="search-and-udow-box">
         <img src="search.png" class="searchImg">
         <a href="#">
-          <img src="udow.png" class="udowImg">
+          <img src="settings.png" class="settingImg">
         </a>
       </div>
     </div>
@@ -76,6 +77,12 @@
       </div>
       </a>
       <a href="#">
+      <div id="udowNavM" class="nav-mobail">
+        <img  id="chatGrayM" src="chat-icon.png">
+        <img id="chatBlueM" src="chat-blue.png">
+      </div>
+      </a>
+      <a href="#">
       <div id="notiNavM" class="nav-mobail">
         <img  id="notiGrayM" src="notification.png">
         <img  id="notiBlueM" src="notafication-blue.png">
@@ -84,7 +91,7 @@
       <a href="#">
       <div id="menuNavM" class="nav-mobail">
         <div class="nav-menu">
-          <img class="profile-img">
+          <img src="no-profile.png" class="profile-img">
         </div>
       </div>
       </a>
@@ -99,7 +106,7 @@
     
     <div class="user-profile-and-name ">
       <div class="menu-profile ">
-        <img class="profile-img lazyload">
+        <img class="profile-img ">
       </div>
       <h4 class="greet"></h4>
     </div>
@@ -152,7 +159,8 @@
      <div class="post-create-container ">
        <div class="post-create-profile-box">
          <div class="post-create-profile">
-           <img class="profile-img lazyload">
+           <img src="no-profile.png" class="profile-img ">
+           <div class="online-status"></div>
          </div>
        </div>
      <div class="textarea ">
@@ -161,7 +169,32 @@
     </div>
     
     
-    
+    <div class="main-story-container">
+      <div class="create-story">
+        <img class="profile-img">
+        <div class="create-st-box">
+          <div class="create-btn">
+            <i class='bx bx-plus'></i>
+          </div>
+          <h4>Add new</h4>
+        </div>
+      </div>
+      <div class="user-story">
+        <div class="story-count-number">1</div>
+      </div>
+      <div class="user-story">
+        <div class="story-count-number">1</div>
+      </div>
+      <div class="user-story">
+        <div class="story-count-number">1</div>
+      </div>
+      <div class="user-story">
+        <div class="story-count-number">1</div>
+      </div>
+      <div class="user-story">
+        <div class="story-count-number">1</div>
+      </div>
+    </div>
     
     
     
@@ -272,7 +305,7 @@
                
       </div>---->
       
-    <!---- <div class="post ">
+<div class="post ">
       <div class="post-header_and_post_content">
               <div class="profile-box ">
                 <div class="post-profile">
@@ -486,6 +519,34 @@
   
   
   
+  <div class="see-reaction-page-opachity">
+    <div class="see-reaction-page">
+      <div class="reaction-page-header">
+        <div class="drag-bar"></div>
+        <p>Reactions</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="st-view-page">
+      <div class="st-show-content-box">
+       <div class="progress-container">
+        <div class="progress-bar"></div>
+      </div>
+      <div class="user-story-profile">
+        <img src="profile.jpg" class="user-st-profile-img">
+        <h4>Lazim Mahmud</h4>
+        <span>•</span>
+        <p>8h</p>
+      </div>
+      </div>
+    </div>
+  
+  <div class="udow-app-page">
+    <div class="chat-page-header">
+      
+    </div>
+  </div>
 
     <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -760,7 +821,7 @@ window.addEventListener('load', () => {
         if (snapshot.exists()) {
             const post = snapshot.val();
             const postId = snapshot.key;
-            const postContainer = document.querySelector('.post-create-container');
+            const postContainer = document.querySelector('.main-story-container');
 
             if (document.getElementById(`post-${postId}`)) {
                 return;
@@ -770,65 +831,64 @@ window.addEventListener('load', () => {
             handleNewPost();
 
             const postElement = document.createElement('div');
-            postElement.className = 'post';
-            postElement.id = `post-${postId}`;
+postElement.className = 'post';
+postElement.id = `post-${postId}`;
 
-            const imageHTML = post.imageUrl ? `<div class="post-img"><img src="${post.imageUrl}"
-            class="lazyload" id="databaseImg"></div>` : '';
-            const profileImageHTML = post.profileImageUrl
-                ? `<img src="${post.profileImageUrl}">`
-                : `<img src="no-profile.png">`;
+const imageHTML = post.imageUrl ? `<div class="post-img"><img src="${post.imageUrl}" class="lazyload" id="databaseImg"></div>` : '';
+const profileImageHTML = post.profileImageUrl ? `<img src="${post.profileImageUrl}">` : `<img src="no-profile.png">`;
 
-            // Set the like count text based on the current like count from the database
-            const likeCountText = `${post.likes || 0} `;
+const likeCountText = `${post.likes || 0} `;
 
-            postElement.innerHTML = `
-                <div class="post-header_and_post_content">
-                    <div class="profile-box">
-                        <div class="post-profile">
-                            ${profileImageHTML}
-                        </div>
-                    </div>
-                    <div class="post-userName-andtime">
-                        <h4>${post.firstName} ${post.lastName}</h4>
-                        <p class="span" id="post-time-${postId}" data-upload-time="${post.uploadTime}">${formatRelativeTime(post.uploadTime)} <span>•</span><span> <i class='bx bx-world'></i></span></p>
-                    </div>
-                    <div class="post-menu">
-                        <i class='bx bx-dots-vertical-rounded'></i>
-                    </div>
-                </div>
-                <div class="post-text">
-                    <p>${post.text.replace(/\n/g, '<br>')}</p>
-                </div>
-                ${imageHTML}
-                <div class="activity-content-box">
-                    <div class="like-content">
-                        <img class="like-round-icon" src="like-round.png">
-                        <h4 id="likeCount-${postId}">${likeCountText}</h4>
-                    </div>
-                    <div class="comment-content">
-                        <p>0 Comment</p>
-                    </div>
-                    
-                </div>
-                <div class="post-activity-container">
-                    <div class="post-activity-box">
-                        <div class="like-box" id="like-box-${postId}">
-                            <img id="likeGray-${postId}" src="like.png">
-                            <img id="likeBlue-${postId}" src="like-blue.png" style="display:none;">
-                            <h4 id="likeText">Like</h4>
-                        </div>
-                        <div class="like-box">
-                            <img src="comment.png">
-                            <h4>Comment</h4>
-                        </div>
-                        <div class="like-box">
-                            <img src="share.png">
-                            <h4>Share</h4>
-                        </div>
-                    </div>
-                </div>
-                `;
+postElement.innerHTML = `
+    <div class="post-header_and_post_content">
+        <div class="profile-box">
+            <div class="post-profile">
+                ${profileImageHTML}
+            </div>
+        </div>
+        <div class="post-userName-andtime">
+            <h4>${post.firstName} ${post.lastName}</h4>
+            <p class="span" id="post-time-${postId}" data-upload-time="${post.uploadTime}">
+                ${formatRelativeTime(post.uploadTime)} 
+                <span>•</span>
+                <span><i class='bx bx-world'></i></span>
+            </p>
+        </div>
+        <div class="post-menu">
+            <i class='bx bx-dots-vertical-rounded'></i>
+        </div>
+    </div>
+    <div class="post-text">
+        <p>${convertLinks(post.text.replace(/\n/g, '<br>'))}</p>
+    </div>
+    ${imageHTML}
+    <div class="activity-content-box">
+        <div class="like-content">
+            <img class="like-round-icon" src="like-round.png">
+            <h4 id="likeCount-${postId}">${likeCountText}</h4>
+        </div>
+        <div class="comment-content">
+            <p>0 Comment</p>
+        </div>
+    </div>
+    <div class="post-activity-container">
+        <div class="post-activity-box">
+            <div class="like-box" id="like-box-${postId}">
+                <img id="likeGray-${postId}" src="like.png">
+                <img id="likeBlue-${postId}" src="like-blue.png" style="display:none;">
+                <h4 id="likeText">Like</h4>
+            </div>
+            <div class="like-box">
+                <img src="comment.png">
+                <h4>Comment</h4>
+            </div>
+            <div class="like-box">
+                <img src="share.png">
+                <h4>Share</h4>
+            </div>
+        </div>
+    </div>
+`;
 
             postContainer.insertAdjacentElement('afterend', postElement);
 
@@ -1162,7 +1222,10 @@ onValue(dbRef(database, 'All_Post'), (snapshot) => {
 
 });
 
-
+function convertLinks(text) {
+    const urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
+    return text.replace(urlPattern, '<a href="$1" target="_blank">$1</a>');
+}
 
 
 // Lazy loading with IntersectionObserver
@@ -1239,69 +1302,125 @@ function updatePostTimes() {
   
   // profile and cover image upload 
   document.querySelector('.edit-save-btn').addEventListener('click', async () => {
-    const profileFile = document.getElementById('profileInp').files[0];
-    const coverFile = document.getElementById('coverImgInp').files[0];
+  const profileFile = document.getElementById('profileInp').files[0];
+  const coverFile = document.getElementById('coverImgInp').files[0];
 
-    let UserCreds = JSON.parse(localStorage.getItem("user-creds"));
-    if (UserCreds && UserCreds.email) {
-        const email = UserCreds.email;
-        const formattedEmail = email.replace('.', ',');
-        const userProfileDetailsRef = dbRef(database, 'User_Profile_details/' + formattedEmail);
+  let UserCreds = JSON.parse(localStorage.getItem('user-creds'));
+  if (UserCreds && UserCreds.email) {
+    const email = UserCreds.email;
+    const formattedEmail = email.replace('.', ',');
+    const userProfileDetailsRef = dbRef(database, 'User_Profile_details/' + formattedEmail);
 
-        try {
-            // Fetch the current data to preserve any existing values
-            const snapshot = await get(userProfileDetailsRef);
-            let currentData = {};
-            if (snapshot.exists()) {
-                currentData = snapshot.val();
-            }
+    try {
+      // Fetch the current data to preserve any existing values
+      const snapshot = await get(userProfileDetailsRef);
+      let currentData = {};
+      if (snapshot.exists()) {
+        currentData = snapshot.val();
+      }
 
-            let profileDownloadURL;
-            let coverDownloadURL;
+      let profileDownloadURL;
+      let coverDownloadURL;
 
-            // Update Profile Image if a new one is provided
-            if (profileFile) {
-                const profileImgRef = ref(storage, 'profileImages/' + profileFile.name);
-                const uploadResult = await uploadBytes(profileImgRef, profileFile);
-                profileDownloadURL = await getDownloadURL(uploadResult.ref);
-                currentData.profileImageURL = profileDownloadURL;
-            }
+      // Function to resize and slightly compress the image
+      const resizeImage = (file, maxWidth, maxHeight) => {
+        return new Promise((resolve, reject) => {
+          if (file) {
+            const img = new Image();
+            const reader = new FileReader();
 
-            // Update Cover Image if a new one is provided
-            if (coverFile) {
-                const coverImgRef = ref(storage, 'coverImages/' + coverFile.name);
-                const coverUploadResult = await uploadBytes(coverImgRef, coverFile);
-                coverDownloadURL = await getDownloadURL(coverUploadResult.ref);
-                currentData.coverImageURL = coverDownloadURL;
-            }
+            reader.onload = (e) => {
+              img.src = e.target.result;
+            };
 
-            // Save the updated data back to the database
-            await set(userProfileDetailsRef, currentData);
+            img.onload = () => {
+              const canvas = document.createElement('canvas');
+              const ctx = canvas.getContext('2d');
 
-            alert('Profile and/or cover images updated successfully!');
+              let width = img.width;
+              let height = img.height;
 
-            // Update all images with class "profile-img" if profile image was updated
-            if (profileDownloadURL) {
-                const profileImgs = document.querySelectorAll('.profile-img');
-                profileImgs.forEach(img => {
-                    img.src = profileDownloadURL;
-                });
-            }
+              // Slightly adjust dimensions if they exceed the max size
+              if (width > maxWidth || height > maxHeight) {
+                if (width / height > maxWidth / maxHeight) {
+                  height = Math.round((height * maxWidth) / width);
+                  width = maxWidth;
+                } else {
+                  width = Math.round((width * maxHeight) / height);
+                  height = maxHeight;
+                }
+              }
 
-            // Update all images with class "cover-img" if cover image was updated
-            if (coverDownloadURL) {
-                const coverImgs = document.querySelectorAll('.cover-img');
-                coverImgs.forEach(img => {
-                    img.src = coverDownloadURL;
-                });
-            }
+              canvas.width = width;
+              canvas.height = height;
+              ctx.drawImage(img, 0, 0, width, height);
 
-        } catch (error) {
-            console.error('Error uploading images:', error);
-        }
-    } else {
-        console.error('No email found in user creds.');
+              // Compress image slightly (90% quality)
+              canvas.toBlob(
+                (blob) => {
+                  resolve(blob);
+                },
+                file.type,
+                0.9 // Compression level for slight reduction (90% quality)
+              );
+            };
+
+            img.onerror = (err) => {
+              reject(err);
+            };
+
+            reader.readAsDataURL(file);
+          } else {
+            reject(new Error('No file provided for resizing.'));
+          }
+        });
+      };
+
+      // Update Profile Image if a new one is provided
+      if (profileFile) {
+        const resizedProfileFile = await resizeImage(profileFile, 800, 800); // Slightly reduce to 800x800
+        const profileImgRef = ref(storage, 'profileImages/' + profileFile.name);
+        const uploadResult = await uploadBytes(profileImgRef, resizedProfileFile);
+        profileDownloadURL = await getDownloadURL(uploadResult.ref);
+        currentData.profileImageURL = profileDownloadURL;
+      }
+
+      // Update Cover Image if a new one is provided
+      if (coverFile) {
+        // Increase max width and height to retain more detail and reduce blurriness
+        const resizedCoverFile = await resizeImage(coverFile, 1600, 600); // Increase dimensions to 1600x600
+        const coverImgRef = ref(storage, 'coverImages/' + coverFile.name);
+        const coverUploadResult = await uploadBytes(coverImgRef, resizedCoverFile);
+        coverDownloadURL = await getDownloadURL(coverUploadResult.ref);
+        currentData.coverImageURL = coverDownloadURL;
+      }
+
+      // Save the updated data back to the database
+      await set(userProfileDetailsRef, currentData);
+
+      alert('Profile and/or cover images updated successfully!');
+
+      // Update all images with class "profile-img" if profile image was updated
+      if (profileDownloadURL) {
+        const profileImgs = document.querySelectorAll('.profile-img');
+        profileImgs.forEach((img) => {
+          img.src = profileDownloadURL;
+        });
+      }
+
+      // Update all images with class "cover-img" if cover image was updated
+      if (coverDownloadURL) {
+        const coverImgs = document.querySelectorAll('.cover-img');
+        coverImgs.forEach((img) => {
+          img.src = coverDownloadURL;
+        });
+      }
+    } catch (error) {
+      console.error('Error uploading images:', error);
     }
+  } else {
+    console.error('No email found in user creds.');
+  }
 });
   
   
