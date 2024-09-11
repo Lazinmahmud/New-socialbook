@@ -103,6 +103,7 @@ document.getElementById("postTextarea").addEventListener('click', function(){
   
   document.querySelector('.popup-opachity').style.display = 'flex'
   document.querySelector('.mobail-nav').style.zIndex = '0'
+  document.getElementById('textareaPlaceholder').focus();
 });
 
 
@@ -161,6 +162,8 @@ let notiBlue = document.getElementById('notiBlue');
 let notiGray = document.getElementById('notiGray');
 let underline = document.querySelector('.underline');
 
+let udowNavM = document.getElementById('udowNavM');
+
 
 
 profileNav.addEventListener('click', function(){
@@ -209,6 +212,8 @@ let profileNavM = document.getElementById('profileNavM');
 let notiNavM = document.getElementById('notiNavM');
 let menuNavM = document.getElementById('menuNavM');
 let navMenuImg = document.querySelector('.nav-menu img');
+let chatGrayM = document.getElementById('chatGrayM');
+let chatBlueM = document.getElementById('chatBlueM');
 
 
 
@@ -236,6 +241,8 @@ homNavM.addEventListener('click', function() {
     profileGrayM.style.display = 'block';
     notiGrayM.style.display = 'block';
     notiBlueM.style.display = 'none';
+    chatBlueM.style.display = 'none';
+    chatGrayM.style.display = 'block';
 
     // Change border style
     navMenuImg.style.border = '2px solid #808080';
@@ -245,7 +252,7 @@ homNavM.addEventListener('click', function() {
     document.querySelector('.main-container').style.display = 'flex';
     document.querySelector('.mobail-nav').style.marginTop = '0';
     document.querySelector('.menu-page-container').style.display = 'none';
-
+    document.querySelector('.udow-app-page').style.display = 'none';
     // Adjust margin
     document.querySelector('.mUnderline').style.marginLeft = '1%';
 
@@ -269,17 +276,44 @@ profileNavM.addEventListener('click', function() {
   homeGrayM.style.display = 'block';
   notiGrayM.style.display = 'block';
   notiBlueM.style.display = 'none';
+  chatBlueM.style.display = 'none';
+    chatGrayM.style.display = 'block';
   navMenuImg.style.border = '2px solid #808080';
   
   document.querySelector('.profile-page-container').style.display = 'block';
   document.querySelector('.main-container').style.display = 'none';
   document.querySelector('.mobail-nav').style.marginTop = '-3rem';
   document.querySelector('.menu-page-container').style.display = 'none';
-  document.querySelector('.mUnderline').style.marginLeft = '25%';
-  
+  document.querySelector('.mUnderline').style.marginLeft = '20%';
+  document.querySelector('.udow-app-page').style.display = 'none';
   // Update isHomNavMSelected flag
   isHomNavMSelected = false;
 });
+
+
+
+udowNavM.addEventListener('click', function(){
+  tapSound.play(); // Play tap sound 
+  document.querySelector('.mUnderline').style.marginLeft = '40%';
+    chatBlueM.style.display = 'block';
+    chatGrayM.style.display = 'none';
+    homeBlueM.style.display = 'none';
+  homeGrayM.style.display = 'block';
+  profileBlueM.style.display = 'none';
+  profileGrayM.style.display = 'block';
+  notiGrayM.style.display = 'block';
+  notiBlueM.style.display = 'none';
+  navMenuImg.style.border = '2px solid #808080';
+  document.querySelector('.mobail-nav').style.marginTop = '-3rem';
+  document.querySelector('.main-container').style.display = 'none';
+  document.querySelector('.profile-page-container').style.display = 'none';
+  document.querySelector('.menu-page-container').style.display = 'none';
+  document.querySelector('.udow-app-page').style.display = 'block';
+  isHomNavMSelected = false;
+});
+
+
+
 
 notiNavM.addEventListener('click', function() {
   tapSound.play(); // Play tap sound
@@ -289,14 +323,16 @@ notiNavM.addEventListener('click', function() {
   profileGrayM.style.display = 'block';
   notiGrayM.style.display = 'none';
   notiBlueM.style.display = 'block';
+  chatBlueM.style.display = 'none';
+    chatGrayM.style.display = 'block';
   navMenuImg.style.border = '2px solid #808080';
   
   document.querySelector('.profile-page-container').style.display = 'none';
   document.querySelector('.main-container').style.display = 'flex';
   document.querySelector('.mobail-nav').style.marginTop = '-3rem';
   document.querySelector('.menu-page-container').style.display = 'none';
-  document.querySelector('.mUnderline').style.marginLeft = '51%';
-  
+  document.querySelector('.mUnderline').style.marginLeft = '60%';
+  document.querySelector('.udow-app-page').style.display = 'none';
   // Update isHomNavMSelected flag
   isHomNavMSelected = false;
 });
@@ -309,11 +345,13 @@ menuNavM.addEventListener('click', function() {
   profileGrayM.style.display = 'block';
   notiGrayM.style.display = 'block';
   notiBlueM.style.display = 'none';
+  chatBlueM.style.display = 'none';
+    chatGrayM.style.display = 'block';
   navMenuImg.style.border = '2px solid var(--main-color)';
   document.querySelector('.menu-page-container').style.display = 'block';
   document.querySelector('.main-container').style.display = 'none';
-  document.querySelector('.mUnderline').style.marginLeft = '75%';
-  
+  document.querySelector('.mUnderline').style.marginLeft = '80%';
+  document.querySelector('.udow-app-page').style.display = 'none';
   document.querySelector('.mobail-nav').style.marginTop = '-3rem';
   document.querySelector('.profile-page-container').style.display = 'none';
   
