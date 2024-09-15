@@ -1,40 +1,4 @@
 
-document.addEventListener('DOMContentLoaded', () => {
-  const daySelect = document.getElementById('day');
-  const monthSelect = document.getElementById('month');
-  const yearSelect = document.getElementById('year');
-
-  // Populate day options
-  for (let i = 1; i <= 31; i++) {
-    const option = document.createElement('option');
-    option.value = i;
-    option.textContent = i;
-    daySelect.appendChild(option);
-  }
-
-  // Populate month options
-  const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-  ];
-  months.forEach((month, index) => {
-    const option = document.createElement('option');
-    option.value = index + 1;
-    option.textContent = month;
-    monthSelect.appendChild(option);
-  });
-
-  // Populate year options (1900 - current year)
-  const currentYear = new Date().getFullYear();
-  for (let i = currentYear; i >= 1900; i--) {
-    const option = document.createElement('option');
-    option.value = i;
-    option.textContent = i;
-    yearSelect.appendChild(option);
-  }
-});
-        
-        
         
 // profile menu click dropdown menu 
 
@@ -42,10 +6,33 @@ function toggleDropdown() {
     const dropdownMenu = document.getElementById('dropdownMenu');
     if (dropdownMenu.style.display === 'none' || dropdownMenu.style.display === '') {
         dropdownMenu.style.display = 'block';
+        dropDownSearch.style.display = 'none';
     } else {
         dropdownMenu.style.display = 'none';
     }
 }
+
+// toggle search menu 
+function toggleSearch() {
+    const dropDownSearch = document.getElementById('dropDownSearch'); // Corrected the variable name
+    const searchInp = document.querySelector('#searchInp');
+    const dropdownMenu = document.getElementById('dropdownMenu'); // Ensure this element is correctly defined in your HTML
+    
+    if (dropDownSearch.style.display === 'none' || dropDownSearch.style.display === '') {
+        dropDownSearch.style.display = 'block';
+        if (dropdownMenu) {
+            dropdownMenu.style.display = 'none'; // Hide the dropdown menu if it exists
+        }
+        searchInp.focus(); // Focus on the search input when dropdown opens
+    } else {
+        dropDownSearch.style.display = 'none';
+    }
+}
+
+
+
+
+
 // post image select and img display 
 const fileInput = document.getElementById('fileInput');
     const selectedImage = document.getElementById('selectedImage');
@@ -163,7 +150,7 @@ let notiGray = document.getElementById('notiGray');
 let underline = document.querySelector('.underline');
 
 let udowNavM = document.getElementById('udowNavM');
-
+let searchResult_profile_page = document.querySelector('.searchResult_profile_page');
 
 
 profileNav.addEventListener('click', function(){
@@ -173,7 +160,9 @@ profileNav.addEventListener('click', function(){
   profileGray.style.display = 'none';
   notiBlue.style.display = 'none';
   notiGray.style.display = 'block';
-  underline.style.marginLeft = '33%'
+  underline.style.marginLeft = '33%';
+  underline.style.display = 'block'
+  searchResult_profile_page.style.display = 'none';
 });
 
 homeNav.addEventListener('click', function(){
@@ -184,6 +173,8 @@ homeNav.addEventListener('click', function(){
   notiBlue.style.display = 'none';
   notiGray.style.display = 'block';
   underline.style.marginLeft = '0'
+  underline.style.display = 'block'
+  searchResult_profile_page.style.display = 'none';
 });
 
 notificationNav.addEventListener('click', function(){
@@ -194,6 +185,8 @@ notificationNav.addEventListener('click', function(){
   notiGray.style.display = 'none';
   notiBlue.style.display = 'block';
   underline.style.marginLeft = '66%'
+  underline.style.display = 'block'
+  searchResult_profile_page.style.display = 'none';
 });
 
 
@@ -254,8 +247,9 @@ homNavM.addEventListener('click', function() {
     document.querySelector('.menu-page-container').style.display = 'none';
     document.querySelector('.udow-app-page').style.display = 'none';
     // Adjust margin
-    document.querySelector('.mUnderline').style.marginLeft = '1%';
+    document.querySelector('.mUnderline').style.marginLeft = '0%';
 
+    document.querySelector('.friend-request-page').style.display = 'none';
     // Add overflow-y: scroll to make the element scrollable
     document.querySelector('.main-container').style.overflowY = 'scroll';
 
@@ -280,12 +274,13 @@ profileNavM.addEventListener('click', function() {
     chatGrayM.style.display = 'block';
   navMenuImg.style.border = '2px solid #808080';
   
-  document.querySelector('.profile-page-container').style.display = 'block';
+  
   document.querySelector('.main-container').style.display = 'none';
   document.querySelector('.mobail-nav').style.marginTop = '-3rem';
   document.querySelector('.menu-page-container').style.display = 'none';
   document.querySelector('.mUnderline').style.marginLeft = '20%';
   document.querySelector('.udow-app-page').style.display = 'none';
+  document.querySelector('.friend-request-page').style.display = 'block';
   // Update isHomNavMSelected flag
   isHomNavMSelected = false;
 });
@@ -309,6 +304,7 @@ udowNavM.addEventListener('click', function(){
   document.querySelector('.profile-page-container').style.display = 'none';
   document.querySelector('.menu-page-container').style.display = 'none';
   document.querySelector('.udow-app-page').style.display = 'block';
+  document.querySelector('.friend-request-page').style.display = 'none';
   isHomNavMSelected = false;
 });
 
@@ -333,6 +329,7 @@ notiNavM.addEventListener('click', function() {
   document.querySelector('.menu-page-container').style.display = 'none';
   document.querySelector('.mUnderline').style.marginLeft = '60%';
   document.querySelector('.udow-app-page').style.display = 'none';
+  document.querySelector('.friend-request-page').style.display = 'none';
   // Update isHomNavMSelected flag
   isHomNavMSelected = false;
 });
@@ -354,6 +351,7 @@ menuNavM.addEventListener('click', function() {
   document.querySelector('.udow-app-page').style.display = 'none';
   document.querySelector('.mobail-nav').style.marginTop = '-3rem';
   document.querySelector('.profile-page-container').style.display = 'none';
+  document.querySelector('.friend-request-page').style.display = 'none';
   
   // Update isHomNavMSelected flag
   isHomNavMSelected = false;
@@ -405,7 +403,7 @@ document.querySelectorAll('img').forEach((img) => {
   });
 });
 
-
+/*
 const likeBox = document.getElementById('likeBox');
   const reactionContainer = document.querySelector('.reaction-container');
   let holdTimer;
@@ -433,3 +431,25 @@ const likeBox = document.getElementById('likeBox');
   reactionContainer.addEventListener('click', function(){
     reactionContainer.style.visibility ='hidden'
   })
+*/
+  
+  
+// profile page open mobail screen 
+
+let postCreateProfile = document.querySelector('.post-create-profile');
+
+postCreateProfile.addEventListener('click', function() {
+  
+  tapSound.play();
+  
+  document.querySelector('.profile-page-container').style.display = 'block';
+  document.querySelector('.main-container').style.display = 'none';
+  
+  homeGray.style.display = 'block';
+  homeBlue.style.display = 'none';
+  profileBlue.style.display = 'block';
+  profileGray.style.display = 'none';
+  notiBlue.style.display = 'none';
+  notiGray.style.display = 'block';
+  underline.style.marginLeft = '33%'
+});
